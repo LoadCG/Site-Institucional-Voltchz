@@ -1,0 +1,8 @@
+# Ignore everything
+*
+
+# Allow specific files/folders
+!index.html
+!IMAGENS/
+!IMAGENS/**
+!.gitignore
