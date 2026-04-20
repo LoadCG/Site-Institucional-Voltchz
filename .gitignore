@@ -6,3 +6,5 @@
 !IMAGENS/
 !IMAGENS/**
 !.gitignore
+!scripts.js
+!styles.css

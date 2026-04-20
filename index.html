@@ -1,1990 +1,309 @@
 <!doctype html>
-<html lang="pt-BR" class="h-full">
+<html lang="pt-BR" class="h-full scroll-smooth">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VoltchZ Brasil — Infraestrutura de Recarga para Veículos Elétricos</title>
-  <meta name="description"
-    content="Instalação de carregadores para veículos elétricos em São José dos Campos e Vale do Paraíba. Projeto técnico, execução segura e suporte contínuo.">
+  <meta name="description" content="Instalação de carregadores para veículos elétricos em São José dos Campos e Vale do Paraíba. Projeto técnico, execução segura e suporte contínuo.">
   <meta property="og:title" content="VoltchZ Brasil — Infraestrutura de Recarga para VEs">
-  <meta property="og:description"
-    content="Instalação de carregadores com engenharia certificada. São José dos Campos e região.">
+  <meta property="og:description" content="Instalação de carregadores com engenharia certificada. São José dos Campos e região.">
   <meta property="og:type" content="website">
+  
+  <!-- CSS & Tailwind -->
+  <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
   <script>
     tailwind.config = {
-      theme: { extend: { fontFamily: { outfit: ['Outfit', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] } } }
+      theme: {
+        extend: {
+          fontFamily: {
+            outfit: ['Outfit', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          colors: {
+            brand: {
+              green: '#22c55e',
+              bg: '#0a0a0f',
+              bg2: '#0d0d14',
+              bg3: '#111118',
+              text: '#f0f0f4',
+              muted: 'rgba(240, 240, 244, 0.60)',
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          }
+        }
+      }
     }
   </script>
-  <style>
-    :root {
-      --green: #22c55e;
-      --green-dim: rgba(34, 197, 94, 0.12);
-      --green-border: rgba(34, 197, 94, 0.25);
-      --bg: #0a0a0f;
-      --bg2: #0d0d14;
-      --bg3: #111118;
-      --white: #ffffff;
-      --white-secondary: #f5f5f7;
-      --text: #f0f0f4;
-      --text-dark: #1a1a1f;
-      --muted: rgba(240, 240, 244, 0.60);
-      --muted2: rgba(240, 240, 244, 0.40);
-      --border: rgba(255, 255, 255, 0.07);
-      --border-light: rgba(0, 0, 0, 0.08);
-    }
-
-    html,
-    body {
-      height: 100%;
-      margin: 0;
-      scroll-behavior: smooth
-    }
-
-    * {
-      box-sizing: border-box
-    }
-
-    body {
-      font-family: 'Outfit', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      -webkit-font-smoothing: antialiased
-    }
-
-    /* ── SCROLLBAR ── */
-    ::-webkit-scrollbar {
-      width: 4px
-    }
-
-    ::-webkit-scrollbar-track {
-      background: var(--bg)
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: rgba(34, 197, 94, 0.3);
-      border-radius: 2px
-    }
-
-    /* ── NAV ── */
-    #main-nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 50;
-      background: rgba(10, 10, 15, 0.88);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border-bottom: 0.5px solid var(--border);
-      transition: border-color .3s, box-shadow .3s;
-    }
-
-    #main-nav.scrolled {
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
-      border-color: rgba(255, 255, 255, 0.10)
-    }
-
-    .nav-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 32px
-    }
-
-    .nav-logo img {
-      height: 32px;
-      width: auto;
-      display: block
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 6px
-    }
-
-    .nav-links a {
-      font-size: 13.5px;
-      font-weight: 500;
-      color: var(--muted);
-      text-decoration: none;
-      padding: 5px 12px;
-      border-radius: 8px;
-      transition: color .2s, background .2s;
-      position: relative;
-    }
-
-    .nav-links a:hover {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.05)
-    }
-
-    .nav-links a.active {
-      color: var(--text)
-    }
-
-    .nav-links a.active::after {
-      content: '';
-      position: absolute;
-      bottom: -1px;
-      left: 12px;
-      right: 12px;
-      height: 1.5px;
-      background: var(--green);
-      border-radius: 2px;
-    }
-
-    .nav-cta {
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      background: var(--green);
-      color: #0a0a0f;
-      font-size: 13.5px;
-      font-weight: 700;
-      padding: 8px 18px;
-      border-radius: 9px;
-      text-decoration: none;
-      letter-spacing: -.01em;
-      transition: filter .2s, transform .15s;
-      white-space: nowrap;
-    }
-
-    .nav-cta:hover {
-      filter: brightness(1.1);
-      transform: translateY(-1px)
-    }
-
-    .nav-cta:active {
-      transform: scale(.97)
-    }
-
-    #mobile-menu-btn {
-      display: none;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 6px;
-      color: var(--text)
-    }
-
-    #mobile-menu {
-      display: none;
-      padding: 12px 16px 16px;
-      border-top: 0.5px solid var(--border)
-    }
-
-    #mobile-menu a {
-      display: block;
-      padding: 10px 12px;
-      font-size: 14px;
-      color: var(--muted);
-      text-decoration: none;
-      border-radius: 8px
-    }
-
-    #mobile-menu a:hover {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.04)
-    }
-
-    #mobile-menu .mob-cta {
-      color: var(--green);
-      font-weight: 600
-    }
-
-    /* ── HERO CAROUSEL ── */
-    #hero-section {
-      min-height: 92vh;
-      position: relative;
-      overflow: hidden;
-      padding-top: 60px;
-    }
-
-    .carousel-wrapper {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      min-height: 92vh;
-    }
-
-    .carousel-slide {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity .8s cubic-bezier(.4, 0, .2, 1);
-      pointer-events: none;
-    }
-
-    .carousel-slide.active {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .carousel-slide-bg {
-      position: absolute;
-      inset: 0;
-      background-size: cover;
-      background-position: center;
-      transition: transform 8s ease-out;
-    }
-
-    .carousel-slide.active .carousel-slide-bg {
-      transform: scale(1.04);
-    }
-
-    .carousel-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(160deg, rgba(10, 10, 15, 0.72) 0%, rgba(10, 10, 15, 0.85) 100%);
-    }
-
-    .carousel-content {
-      position: relative;
-      z-index: 10;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 40px 24px 48px;
-      text-align: center;
-      width: 100%;
-    }
-
-    /* Carousel nav arrows */
-    .carousel-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 20;
-      background: rgba(34, 197, 94, 0.12);
-      border: 0.5px solid rgba(34, 197, 94, 0.28);
-      border-radius: 50%;
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: var(--green);
-      transition: background .2s, transform .2s;
-    }
-
-    .carousel-arrow:hover {
-      background: rgba(34, 197, 94, 0.22);
-      transform: translateY(-50%) scale(1.08);
-    }
-
-    .carousel-arrow.prev {
-      left: 20px;
-    }
-
-    .carousel-arrow.next {
-      right: 20px;
-    }
-
-    /* Carousel dots */
-    .carousel-dots {
-      position: absolute;
-      bottom: 28px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 8px;
-      z-index: 20;
-    }
-
-    .carousel-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: rgba(240, 240, 244, 0.25);
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      transition: background .3s, transform .3s;
-    }
-
-    .carousel-dot.active {
-      background: var(--green);
-      transform: scale(1.3);
-    }
-
-    /* ── ORB ── */
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: .13;
-      animation: orbFloat 14s ease-in-out infinite alternate;
-      pointer-events: none
-    }
-
-    @keyframes orbFloat {
-      0% {
-        transform: translate(0, 0) scale(1)
-      }
-
-      50% {
-        transform: translate(28px, -18px) scale(1.08)
-      }
-
-      100% {
-        transform: translate(-18px, 28px) scale(.94)
-      }
-    }
-
-    /* ── TRUST BAR ── */
-    .trust-bar {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 0;
-      border-top: 0.5px solid var(--border);
-      border-bottom: 0.5px solid var(--border);
-      background: rgba(10, 10, 12, 0.6);
-    }
-
-    .trust-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 13px 22px;
-      border-right: 0.5px solid var(--border);
-      font-size: 12.5px;
-      font-weight: 500;
-      color: var(--muted);
-      white-space: nowrap;
-    }
-
-    .trust-item:last-child {
-      border-right: none
-    }
-
-    .trust-item svg {
-      width: 16px;
-      height: 16px;
-      flex-shrink: 0;
-      color: var(--green)
-    }
-
-    /* ── STATS CONTAINER ── */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      background: rgba(255, 255, 255, 0.04);
-      border: 0.5px solid rgba(255, 255, 255, 0.07);
-      border-radius: 14px;
-      overflow: hidden;
-      max-width: 520px;
-      margin: 0 auto;
-    }
-
-    .stat-item {
-      padding: 20px 16px;
-      text-align: center;
-      background: rgba(17, 17, 24, 0.8);
-    }
-
-    .stat-item:not(:last-child) {
-      border-right: 0.5px solid rgba(255, 255, 255, 0.06)
-    }
-
-    .stat-num {
-      font-size: 34px;
-      font-weight: 800;
-      color: var(--green);
-      letter-spacing: -.04em;
-      line-height: 1;
-      font-variant-numeric: tabular-nums;
-      font-family: 'JetBrains Mono', monospace
-    }
-
-    .stat-label {
-      font-size: 10.5px;
-      color: rgba(255, 255, 255, 0.65);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      margin-top: 5px;
-      font-weight: 600
-    }
-
-    /* ── SECTIONS ── */
-    section {
-      padding: 88px 0
-    }
-
-    .section-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 24px
-    }
-
-    .section-eyebrow {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      color: var(--green);
-      font-family: 'JetBrains Mono', monospace;
-      margin-bottom: 12px
-    }
-
-    .section-title {
-      font-size: clamp(26px, 4vw, 38px);
-      font-weight: 800;
-      color: var(--text);
-      line-height: 1.15;
-      letter-spacing: -.02em
-    }
-
-    /* ── SERVICE CARDS ── */
-    .svc-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px
-    }
-
-    .svc-card {
-      background: rgba(240, 240, 244, 0.025);
-      border: 0.5px solid rgba(240, 240, 244, 0.07);
-      border-radius: 16px;
-      padding: 22px;
-      transition: transform .28s cubic-bezier(.34, 1.56, .64, 1), border-color .25s, background .25s, box-shadow .25s;
-      cursor: default;
-    }
-
-    .svc-card:hover {
-      transform: translateY(-6px);
-      border-color: rgba(34, 197, 94, 0.45);
-      background: rgba(34, 197, 94, 0.07);
-      box-shadow: 0 16px 40px rgba(34, 197, 94, 0.12);
-    }
-
-    .svc-card.featured {
-      border-color: rgba(34, 197, 94, 0.3);
-      background: rgba(34, 197, 94, 0.06);
-    }
-
-    .svc-card.featured:hover {
-      border-color: rgba(34, 197, 94, 0.55);
-      background: rgba(34, 197, 94, 0.10)
-    }
-
-    .svc-icon-wrap {
-      width: 44px;
-      height: 44px;
-      border-radius: 11px;
-      background: rgba(34, 197, 94, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-    }
-
-    .svc-icon-wrap svg {
-      width: 20px;
-      height: 20px;
-      color: var(--green)
-    }
-
-    .svc-tag {
-      font-size: 10px;
-      font-weight: 600;
-      color: var(--green);
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      margin-bottom: 5px
-    }
-
-    .svc-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 8px
-    }
-
-    .svc-desc {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.65
-    }
-
-    .svc-badge {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 600;
-      padding: 3px 9px;
-      border-radius: 99px;
-      background: rgba(34, 197, 94, 0.15);
-      color: var(--green);
-      border: 0.5px solid rgba(34, 197, 94, 0.25);
-      margin-bottom: 12px;
-    }
-
-    /* CTA button inside service card */
-    .svc-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-top: 14px;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--green);
-      text-decoration: none;
-      border: 0.5px solid rgba(34, 197, 94, 0.28);
-      border-radius: 8px;
-      padding: 6px 14px;
-      transition: background .2s, border-color .2s;
-    }
-
-    .svc-cta:hover {
-      background: rgba(34, 197, 94, 0.1);
-      border-color: rgba(34, 197, 94, 0.5);
-    }
-
-    /* ── ABOUT CHECKS ── */
-    .check-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 10px 0
-    }
-
-    .check-dot {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: rgba(34, 197, 94, 0.12);
-      border: 0.5px solid rgba(34, 197, 94, 0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-
-    .check-dot svg {
-      width: 12px;
-      height: 12px;
-      color: var(--green)
-    }
-
-    /* ── FOUNDER ── */
-    .founder-card {
-      background: rgba(34, 197, 94, 0.05);
-      border: 0.5px solid rgba(34, 197, 94, 0.14);
-      border-radius: 20px;
-      padding: 36px;
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 28px;
-      align-items: start;
-    }
-
-    .founder-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(34, 197, 94, 0.18), rgba(34, 197, 94, 0.06));
-      border: 0.5px solid rgba(34, 197, 94, 0.22);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .founder-initial {
-      font-size: 28px;
-      font-weight: 800;
-      color: var(--green)
-    }
-
-    .founder-name {
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 3px;
-      letter-spacing: -.02em
-    }
-
-    .founder-role {
-      font-size: 12px;
-      color: var(--green);
-      font-weight: 600;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-      font-family: 'JetBrains Mono', monospace
-    }
-
-    .creds-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      margin-bottom: 18px
-    }
-
-    .cred-pill {
-      font-size: 11px;
-      font-weight: 600;
-      padding: 4px 11px;
-      border-radius: 99px;
-      background: rgba(34, 197, 94, 0.1);
-      border: 0.5px solid rgba(34, 197, 94, 0.22);
-      color: rgba(240, 240, 244, 0.85);
-      letter-spacing: .02em;
-    }
-
-    .founder-quote {
-      border-top: 0.5px solid rgba(255, 255, 255, 0.08);
-      margin-top: 20px;
-      padding-top: 20px;
-    }
-
-    .founder-quote p {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--green);
-      line-height: 1.6
-    }
-
-    /* ── PROCESS ── */
-    .process-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0
-    }
-
-    .process-step {
-      display: flex;
-      gap: 18px;
-      padding: 18px 0;
-      position: relative
-    }
-
-    .process-step:not(:last-child)::after {
-      content: '';
-      position: absolute;
-      left: 15px;
-      top: 50px;
-      bottom: 0;
-      width: 0.5px;
-      background: rgba(34, 197, 94, 0.2);
-    }
-
-    .step-num {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      background: rgba(34, 197, 94, 0.1);
-      border: 0.5px solid rgba(34, 197, 94, 0.28);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 700;
-      color: var(--green);
-      font-family: 'JetBrains Mono', monospace;
-    }
-
-    .step-body {
-      padding-top: 4px
-    }
-
-    .step-title {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 3px
-    }
-
-    .step-desc {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.55
-    }
-
-    /* ── FAQ ── */
-    .faq-item {
-      border: 0.5px solid rgba(240, 240, 244, 0.07);
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 6px;
-      transition: border-color .25s, background .25s;
-    }
-
-    .faq-item.open {
-      border-color: rgba(34, 197, 94, 0.25);
-      background: rgba(34, 197, 94, 0.04)
-    }
-
-    .faq-btn {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 18px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      text-align: left;
-    }
-
-    .faq-btn:hover {
-      background: rgba(255, 255, 255, 0.025)
-    }
-
-    .faq-q {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-      padding-right: 16px;
-      line-height: 1.4
-    }
-
-    .faq-chevron {
-      width: 18px;
-      height: 18px;
-      color: rgba(240, 240, 244, 0.35);
-      flex-shrink: 0;
-      transition: transform .3s ease
-    }
-
-    .faq-item.open .faq-chevron {
-      transform: rotate(180deg);
-      color: rgba(34, 197, 94, 0.7)
-    }
-
-    .faq-answer {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height .38s cubic-bezier(.4, 0, .2, 1), opacity .3s;
-      opacity: 0
-    }
-
-    .faq-answer.open {
-      max-height: 400px;
-      opacity: 1
-    }
-
-    .faq-answer-inner {
-      padding: 0 18px 16px;
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.7;
-      border-top: 0.5px solid rgba(255, 255, 255, 0.05)
-    }
-
-    /* ── CTA SECTION ── */
-    .cta-card {
-      background: linear-gradient(135deg, rgba(34, 197, 94, 0.06), rgba(14, 165, 233, 0.03));
-      border: 0.5px solid rgba(34, 197, 94, 0.2);
-      border-radius: 24px;
-      padding: 52px 40px;
-      text-align: center;
-    }
-
-    .cta-card .section-eyebrow {
-      color: var(--green)
-    }
-
-    .cta-card .section-title {
-      color: var(--text-dark) !important
-    }
-
-    .cta-card .cta-desc {
-      font-size: 16px;
-      color: #555;
-      max-width: 480px;
-      margin: 0 auto 36px;
-      line-height: 1.75
-    }
-
-    .cta-card .btn-ghost {
-      border-color: rgba(0, 0, 0, 0.15);
-      color: var(--text-dark)
-    }
-
-    .cta-card .btn-ghost:hover {
-      border-color: rgba(0, 0, 0, 0.3);
-      background: rgba(0, 0, 0, 0.03)
-    }
-
-    /* ── BUTTONS ── */
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--green);
-      color: #0a0a0f;
-      font-size: 15px;
-      font-weight: 700;
-      padding: 14px 28px;
-      border-radius: 11px;
-      text-decoration: none;
-      letter-spacing: -.01em;
-      transition: filter .2s, transform .15s, box-shadow .2s;
-      box-shadow: 0 8px 24px rgba(34, 197, 94, 0.28);
-    }
-
-    .btn-primary:hover {
-      filter: brightness(1.08);
-      transform: translateY(-2px);
-      box-shadow: 0 14px 32px rgba(34, 197, 94, 0.36)
-    }
-
-    .btn-primary:active {
-      transform: scale(.97)
-    }
-
-    .btn-ghost {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      border: 0.5px solid rgba(240, 240, 244, 0.15);
-      color: var(--text);
-      font-size: 14px;
-      font-weight: 500;
-      padding: 14px 22px;
-      border-radius: 11px;
-      text-decoration: none;
-      transition: border-color .2s, background .2s, transform .15s;
-    }
-
-    .btn-ghost:hover {
-      border-color: rgba(240, 240, 244, 0.28);
-      background: rgba(255, 255, 255, 0.04);
-      transform: translateY(-1px)
-    }
-
-    /* ── FADE IN ── */
-    .fade-up {
-      opacity: 0;
-      transform: translateY(28px);
-      animation: fadeUp .75s cubic-bezier(.34, 1.56, .64, 1) forwards
-    }
-
-    @keyframes fadeUp {
-      to {
-        opacity: 1;
-        transform: translateY(0)
-      }
-    }
-
-    .d1 {
-      animation-delay: .1s
-    }
-
-    .d2 {
-      animation-delay: .22s
-    }
-
-    .d3 {
-      animation-delay: .34s
-    }
-
-    .d4 {
-      animation-delay: .46s
-    }
-
-    .d5 {
-      animation-delay: .58s
-    }
-
-    .d6 {
-      animation-delay: .7s
-    }
-
-    .in-view {
-      animation: fadeUp .7s cubic-bezier(.34, 1.56, .64, 1) forwards
-    }
-
-    /* ── DIVIDER ── */
-    .volt-divider {
-      height: 0.5px;
-      background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.15) 30%, rgba(34, 197, 94, 0.15) 70%, transparent);
-      margin: 0
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      background: #08080c;
-      border-top: 0.5px solid rgba(255, 255, 255, 0.05);
-      padding: 28px 0
-    }
-
-    /* ── SCROLL INDICATOR ── */
-    .scroll-ind {
-      animation: bounce 2.2s ease-in-out infinite;
-      color: rgba(240, 240, 244, 0.3)
-    }
-
-    @keyframes bounce {
-
-      0%,
-      100% {
-        transform: translateY(0);
-        opacity: .5
-      }
-
-      50% {
-        transform: translateY(9px);
-        opacity: 1
-      }
-    }
-
-    /* ── PULSE CTA ── */
-    .pulse {
-      animation: pulse 2.6s ease-out infinite
-    }
-
-    @keyframes pulse {
-      0% {
-        box-shadow: 0 0 0 0 rgba(34, 197, 94, .45)
-      }
-
-      70% {
-        box-shadow: 0 0 0 14px rgba(34, 197, 94, 0)
-      }
-
-      100% {
-        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0)
-      }
-    }
-
-    /* ── VOLTAGE LINE ── */
-    .voltage-line {
-      height: 0.5px;
-      background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.18), transparent);
-      width: 100%
-    }
-
-    /* ── MVV CARDS ── */
-    .mvv-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px
-    }
-
-    .mvv-card {
-      border-radius: 16px;
-      padding: 28px;
-      border: 0.5px solid rgba(34, 197, 94, 0.14);
-      transition: transform .28s cubic-bezier(.34, 1.56, .64, 1), border-color .25s, box-shadow .25s;
-    }
-
-    .mvv-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(34, 197, 94, 0.35);
-      box-shadow: 0 12px 32px rgba(34, 197, 94, 0.1);
-    }
-
-    .mvv-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      background: rgba(34, 197, 94, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 18px;
-    }
-
-    .mvv-icon svg {
-      width: 22px;
-      height: 22px;
-      color: var(--green)
-    }
-
-    .mvv-label {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      color: var(--green);
-      margin-bottom: 8px;
-      font-family: 'JetBrains Mono', monospace
-    }
-
-    .mvv-title {
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 10px;
-      letter-spacing: -.02em
-    }
-
-    .mvv-text {
-      font-size: 13.5px;
-      color: var(--muted);
-      line-height: 1.7
-    }
-
-    .valores-list {
-      list-style: none;
-      padding: 0;
-      margin: 12px 0 0
-    }
-
-    .valores-list li {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13.5px;
-      color: var(--muted);
-      padding: 5px 0
-    }
-
-    .valores-list li::before {
-      content: '';
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--green);
-      flex-shrink: 0
-    }
-
-    /* ── NOVO CARROSSEL DE CLIENTES ── */
-    .clients-slider-wrapper {
-      position: relative;
-      width: 100%;
-      border-radius: 20px;
-      overflow: hidden;
-      aspect-ratio: 2.3/1;
-      margin-top: 36px;
-      background: #000;
-    }
-
-    .client-slide {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      transition: opacity .7s ease-in-out;
-      display: flex;
-      align-items: flex-end;
-      padding: 48px 56px;
-      background-size: cover;
-      background-position: center;
-      pointer-events: none;
-    }
-
-    .client-slide::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(10, 10, 15, 0.92) 0%, transparent 70%);
-      z-index: 1;
-    }
-
-    .client-slide.active {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .client-slide-content {
-      position: relative;
-      z-index: 2;
-      transform: translateY(16px);
-      opacity: 0;
-      transition: opacity .5s, transform .5s;
-      transition-delay: .2s;
-      border-left: 3px solid var(--green);
-      padding-left: 20px;
-    }
-
-    .client-slide.active .client-slide-content {
-      transform: translateY(0);
-      opacity: 1;
-    }
-
-    .client-slide-title {
-      font-size: clamp(22px, 2.5vw, 32px);
-      font-weight: 800;
-      color: #fff;
-      line-height: 1.15;
-      margin-bottom: 8px;
-    }
-
-    .client-slide-desc {
-      font-size: 15px;
-      font-weight: 500;
-      color: rgba(255, 255, 255, 0.7);
-      max-width: 500px;
-    }
-
-    .client-slider-dots {
-      position: absolute;
-      bottom: 32px;
-      right: 48px;
-      display: flex;
-      gap: 10px;
-      z-index: 10;
-    }
-
-    .client-slider-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.25);
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      transition: background .3s, transform .3s;
-    }
-
-    .client-slider-dot.active {
-      background: var(--green);
-      transform: scale(1.35);
-    }
-
-    .client-slider-arrow {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      z-index: 20;
-      width: 44px;
-      height: 44px;
-      background: rgba(0, 0, 0, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: #fff;
-      backdrop-filter: blur(6px);
-      transition: background .2s, border-color .2s;
-      opacity: 0;
-    }
-
-    .clients-slider-wrapper:hover .client-slider-arrow {
-      opacity: 1;
-    }
-
-    .client-slider-arrow:hover {
-      background: rgba(34, 197, 94, 0.3);
-      border-color: var(--green);
-    }
-
-    .client-slider-arrow.prev {
-      left: 24px;
-    }
-
-    .client-slider-arrow.next {
-      right: 24px;
-    }
-
-    /* ── BENTO GRID (O que a Voltchz faz) ── */
-    .bento-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 16px;
-      margin-top: 36px;
-    }
-
-    .bento-card {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 16px;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      transition: transform .25s, border-color .25s, background .25s;
-    }
-
-    .bento-card:hover {
-      border-color: rgba(34, 197, 94, 0.35);
-      background: rgba(34, 197, 94, 0.06);
-      transform: translateY(-4px);
-    }
-
-    .bento-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: rgba(34, 197, 94, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .bento-icon svg {
-      width: 22px;
-      height: 22px;
-      color: var(--green);
-    }
-
-    .bento-title {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .split-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      align-items: center;
-    }
-
-    .quem-somos-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.1fr;
-      gap: 64px;
-      align-items: center;
-    }
-
-    /* ── RESPONSIVE ── */
-    @media(max-width:768px) {
-
-      .nav-links,
-      .nav-cta.desktop-only {
-        display: none
-      }
-
-      #mobile-menu-btn {
-        display: block
-      }
-
-      .svc-grid {
-        grid-template-columns: 1fr 1fr
-      }
-
-      .founder-card {
-        grid-template-columns: 1fr;
-        gap: 20px
-      }
-
-      .founder-avatar {
-        width: 64px;
-        height: 64px
-      }
-
-      section {
-        padding: 64px 0
-      }
-
-      .stats-grid {
-        max-width: 100%
-      }
-
-      .trust-item {
-        padding: 10px 14px
-      }
-
-      .mvv-grid {
-        grid-template-columns: 1fr
-      }
-
-      .clients-gallery {
-        grid-template-columns: 1fr 1fr
-      }
-
-      .carousel-arrow {
-        display: none
-      }
-
-      .bento-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .bento-card {
-        padding: 20px;
-      }
-
-      .client-slide {
-        padding: 32px 24px;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-      }
-
-      .client-slide-content {
-        border-left: none;
-        padding-left: 0;
-      }
-
-      .client-slider-dots {
-        bottom: 16px;
-        left: 50%;
-        right: auto;
-        transform: translateX(-50%);
-      }
-
-      .client-slider-arrow {
-        display: none;
-      }
-
-      .split-grid,
-      .quem-somos-grid {
-        grid-template-columns: 1fr !important;
-        gap: 32px !important;
-      }
-
-      .section-title {
-        font-size: 32px
-      }
-    }
-
-    @media(max-width:480px) {
-      .svc-grid {
-        grid-template-columns: 1fr
-      }
-
-      .stats-grid {
-        grid-template-columns: 1fr 1fr
-      }
-
-      .stats-grid .stat-item:last-child {
-        grid-column: 1/-1;
-        border-right: none;
-        border-top: 0.5px solid rgba(255, 255, 255, 0.06)
-      }
-
-      .trust-bar {
-        flex-direction: column;
-        gap: 0
-      }
-
-      .trust-item {
-        border-right: none;
-        border-bottom: 0.5px solid var(--border);
-        width: 100%;
-        justify-content: center
-      }
-
-      .trust-item:last-child {
-        border-bottom: none
-      }
-
-      .cta-card {
-        padding: 36px 20px
-      }
-
-      .clients-gallery {
-        grid-template-columns: 1fr
-      }
-    }
-
-    @media(prefers-reduced-motion:reduce) {
-      * {
-        animation-duration: .01ms !important;
-        transition-duration: .01ms !important
-      }
-    }
-
-    /* ── HIGHLIGHT BG SECTION ── */
-    .section-highlight {
-      background: linear-gradient(180deg, var(--bg) 0%, #0d1a12 50%, var(--bg) 100%)
-    }
-
-    /* ── SERV HORIZONTAL CARD (White Theme) ── */
-    .serv-horiz-card {
-      display: flex;
-      gap: 24px;
-      align-items: flex-start;
-      padding: 28px;
-      border-radius: 16px;
-      border: 1px solid rgba(0, 0, 0, 0.06);
-      background: #f8f8fa;
-      transition: transform .28s cubic-bezier(.34, 1.56, .64, 1), border-color .25s, background .25s, box-shadow .25s;
-    }
-
-    .serv-horiz-card:hover {
-      transform: translateY(-4px);
-      border-color: var(--green);
-      background: #ffffff;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
-    }
-
-    .serv-horiz-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 13px;
-      flex-shrink: 0;
-      background: rgba(34, 197, 94, 0.12);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .serv-horiz-icon svg {
-      width: 24px;
-      height: 24px;
-      color: var(--green)
-    }
-
-    .serv-horiz-body {}
-
-    .serv-horiz-title {
-      font-size: 17px;
-      font-weight: 800;
-      color: var(--text-dark);
-      margin-bottom: 8px;
-      letter-spacing: -.01em
-    }
-
-    .serv-horiz-desc {
-      font-size: 14.5px;
-      color: #555;
-      line-height: 1.6;
-      margin-bottom: 12px
-    }
-
-    .founder-image-wrapper {
-      position: relative;
-      border-radius: 24px;
-      overflow: hidden;
-      aspect-ratio: 3/4;
-    }
-
-    .founder-image-wrapper img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .founder-badge {
-      position: absolute;
-      bottom: 24px;
-      left: 24px;
-      background: rgba(10, 10, 15, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(8px);
-      padding: 16px 20px;
-      border-radius: 16px;
-    }
-  </style>
 </head>
 
-<body>
+<body class="h-full font-outfit bg-brand-bg text-brand-text selection:bg-brand-green/30">
 
-  <!-- JSON-LD Schema -->
-  <script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"LocalBusiness",
-  "name":"VoltchZ Brasil",
-  "description":"Infraestrutura de recarga para veículos elétricos",
-  "telephone":"+5512981039845",
-  "email":"contato@voltchz.com.br",
-  "address":{"@type":"PostalAddress","addressLocality":"São José dos Campos","addressRegion":"SP","addressCountry":"BR"},
-  "areaServed":"Vale do Paraíba",
-  "serviceType":"Instalação de carregadores para veículos elétricos"
-}
-</script>
-
-  <!-- NAV -->
-  <nav id="main-nav">
-    <div class="nav-inner">
-      <a href="#hero-section" style="text-decoration:none;display:flex;align-items:center">
-        <img src="IMAGENS/logo.png" alt="VoltchZ Brasil" style="height:30px;width:auto">
+  <!-- NAVIGATION -->
+  <nav id="main-nav" class="fixed top-0 left-0 w-full z-50 bg-brand-bg/90 backdrop-blur-[18px] border-b border-white/5 transition-all duration-300">
+    <div class="max-w-[1200px] mx-auto px-6 h-[60px] flex items-center justify-between gap-8">
+      <a href="#" class="flex-shrink-0">
+        <img src="IMAGENS/logo.png" alt="VoltchZ Brasil" class="h-8 w-auto">
       </a>
-      <div class="nav-links" id="nav-links">
-        <a href="#servicos">Soluções</a>
-        <a href="#o-que-faz">Diferenciais</a>
-        <a href="#sobre">Sobre Nós</a>
-        <a href="#clientes">Clientes</a>
-        <a href="#contato">Contato</a>
+
+      <div id="nav-links" class="hidden md:flex items-center gap-1.5">
+        <a href="#servicos" class="text-[13.5px] font-medium text-brand-muted hover:text-brand-text hover:bg-white/5 px-3 py-1.5 rounded-lg transition-all duration-200">Serviços</a>
+        <a href="#o-que-faz" class="text-[13.5px] font-medium text-brand-muted hover:text-brand-text hover:bg-white/5 px-3 py-1.5 rounded-lg transition-all duration-200">Diferenciais</a>
+        <a href="#sobre" class="text-[13.5px] font-medium text-brand-muted hover:text-brand-text hover:bg-white/5 px-3 py-1.5 rounded-lg transition-all duration-200">Sobre</a>
+        <a href="#clientes" class="text-[13.5px] font-medium text-brand-muted hover:text-brand-text hover:bg-white/5 px-3 py-1.5 rounded-lg transition-all duration-200">Clientes</a>
+        <a href="#contato" class="text-[13.5px] font-medium text-brand-muted hover:text-brand-text hover:bg-white/5 px-3 py-1.5 rounded-lg transition-all duration-200">Contato</a>
       </div>
-      <a href="https://wa.me/5512981039845" target="_blank" rel="noopener noreferrer" class="nav-cta desktop-only">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-          <path
-            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-        </svg>
-        Falar com Especialista
-      </a>
-      <button id="mobile-menu-btn" aria-label="Menu"
-        onclick="document.getElementById('mobile-menu').style.display=document.getElementById('mobile-menu').style.display==='block'?'none':'block'">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round">
-          <line x1="3" y1="6" x2="21" y2="6" />
-          <line x1="3" y1="12" x2="21" y2="12" />
-          <line x1="3" y1="18" x2="21" y2="18" />
-        </svg>
-      </button>
+
+      <div class="flex items-center gap-4">
+        <a href="https://wa.me/5512981039845" target="_blank" rel="noopener noreferrer" 
+           class="hidden sm:flex items-center gap-2 bg-brand-green text-brand-bg text-[13.5px] font-bold px-[18px] py-2 rounded-[9px] hover:brightness-110 active:scale-95 transition-all whitespace-nowrap shadow-lg shadow-brand-green/10">
+          Orçamento Grátis
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+        <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden p-2 text-brand-text hover:bg-white/5 rounded-lg">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
     </div>
-    <div id="mobile-menu">
-      <a href="#servicos" onclick="this.parentElement.style.display='none'">Soluções</a>
-      <a href="#o-que-faz" onclick="this.parentElement.style.display='none'">Diferenciais</a>
-      <a href="#sobre" onclick="this.parentElement.style.display='none'">Sobre Nós</a>
-      <a href="#clientes" onclick="this.parentElement.style.display='none'">Clientes</a>
-      <a href="#contato" onclick="this.parentElement.style.display='none'">Contato</a>
-      <a href="https://wa.me/5512981039845" target="_blank" rel="noopener noreferrer" class="mob-cta"
-        onclick="this.parentElement.style.display='none'" style="margin-top:8px">Falar com Especialista →</a>
+    
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden px-4 pb-4 border-t border-white/5 bg-brand-bg shadow-2xl">
+      <a href="#servicos" class="block py-3 text-brand-muted hover:text-brand-text border-b border-white/5">Serviços</a>
+      <a href="#o-que-faz" class="block py-3 text-brand-muted hover:text-brand-text border-b border-white/5">Diferenciais</a>
+      <a href="#sobre" class="block py-3 text-brand-muted hover:text-brand-text border-b border-white/5">Sobre</a>
+      <a href="#clientes" class="block py-3 text-brand-muted hover:text-brand-text border-b border-white/5">Clientes</a>
+      <a href="#contato" class="block py-3 text-brand-muted hover:text-brand-text border-b border-white/5">Contato</a>
+      <a href="https://wa.me/5512981039845" class="block py-4 text-brand-green font-bold text-center">Falar com Especialista</a>
     </div>
   </nav>
 
-  <!-- ═══════════════════════════════════════════════════
-     SEÇÃO 1: HOME — CARROSSEL
-══════════════════════════════════════════════════════ -->
-  <header id="hero-section">
-    <div class="carousel-wrapper">
-
+  <!-- HERO SECTION -->
+  <header id="hero-section" class="relative min-h-[92vh] overflow-hidden pt-[60px]">
+    <div class="carousel-wrapper relative w-full h-full min-h-[92vh]">
       <!-- Slide 1 -->
-      <div class="carousel-slide active" id="slide-0" role="group" aria-label="Slide 1 de 3">
-        <div class="carousel-slide-bg"
-          style="background-image:linear-gradient(160deg,rgba(10,10,15,0.72) 0%,rgba(10,10,15,0.85) 100%),url('IMAGENS/BANNER-ROTATIVO-01.png')">
-        </div>
-        <div class="carousel-overlay"></div>
-        <div class="orb" style="width:480px;height:480px;top:-80px;right:-80px;background:#22c55e;animation-delay:0s">
-        </div>
-        <div class="orb"
-          style="width:380px;height:380px;bottom:-40px;left:-60px;background:#0ea5e9;animation-delay:-5s"></div>
-        <div class="carousel-content">
-          <div class="fade-up d1" style="margin-bottom:22px">
-            <span
-              style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:99px;border:0.5px solid rgba(34,197,94,0.28);background:rgba(34,197,94,0.07);font-size:11px;color:var(--green);font-weight:600;letter-spacing:.07em;text-transform:uppercase;font-family:'JetBrains Mono',monospace">
-              <span
-                style="width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2.2s ease-out infinite"></span>
-              São José dos Campos — SP
+      <div class="carousel-slide active" id="slide-0">
+        <div class="carousel-slide-bg" style="background-image:url('https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=1920&h=1080&fit=crop')"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-brand-bg/80 to-brand-bg/95"></div>
+        <div class="orb w-[420px] h-[420px] -top-20 -right-20 bg-brand-green/20"></div>
+        <div class="relative z-10 max-w-[900px] mx-auto px-6 py-20 text-center w-full">
+          <div class="mb-8 flex justify-center observe">
+            <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-brand-green/30 bg-brand-green/10 text-[11px] text-brand-green font-bold tracking-widest uppercase font-mono">
+              <span class="w-1.5 h-1.5 bg-brand-green rounded-full animate-pulse"></span>
+              Engenharia Certificada
             </span>
           </div>
-          <h1 class="fade-up d2"
-            style="font-size:clamp(32px,5.5vw,62px);font-weight:800;line-height:1.1;letter-spacing:-.03em;color:var(--text);margin:0 0 22px">
-            Seu carro carregando com segurança,<br>
-            <span style="color:var(--green)">sua família tranquila</span>
+          <h1 class="text-[clamp(34px,6vw,68px)] font-extrabold leading-[1.05] tracking-tight text-brand-text mb-8 observe">
+            Energia para o futuro,<br>
+            <span class="text-brand-green">segurança no agora</span>
           </h1>
-          <p class="fade-up d3"
-            style="font-size:clamp(15px,2vw,18px);color:rgba(255,255,255,0.8);max-width:580px;margin:0 auto 36px;line-height:1.75">
-            Instalação feita por especialista, sem riscos para sua casa.
+          <p class="text-[clamp(16px,2vw,19px)] text-white/70 max-w-[620px] mx-auto mb-10 leading-relaxed observe">
+            A VoltchZ entrega a infraestrutura completa de carregamento elétrico com rigor técnico e suporte de engenharia.
           </p>
-          <div class="fade-up d4"
-            style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin-bottom:52px">
-            <a href="https://wa.me/5512981039845" target="_blank" rel="noopener noreferrer" class="btn-primary pulse">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-              </svg>
-              Falar com especialista
+          <div class="flex items-center justify-center gap-4 flex-wrap mb-16 observe">
+            <a href="https://wa.me/5512981039845" target="_blank" rel="noopener noreferrer" 
+               class="bg-brand-green text-brand-bg font-bold py-4 px-10 rounded-2xl hover:brightness-110 active:scale-95 transition-all shadow-xl shadow-brand-green/20">
+              Solicitar Orçamento
             </a>
-            <a href="#servicos" class="btn-ghost">
-              Conheça Nossos Serviços
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round">
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
+            <a href="#servicos" class="border border-white/20 bg-white/5 backdrop-blur-sm text-brand-text py-4 px-10 rounded-2xl hover:bg-white/10 transition-all font-bold">
+              Nossos Serviços
             </a>
           </div>
+          
           <!-- Stats -->
-          <div class="fade-up d5 stats-grid">
-            <div class="stat-item">
-              <div class="stat-num" data-target="200" data-prefix="+">+0</div>
-              <div class="stat-label">Clientes Atendidos</div>
+          <div class="grid grid-cols-3 bg-white/5 border border-white/10 rounded-3xl overflow-hidden max-w-[560px] mx-auto backdrop-blur-md observe">
+            <div class="p-6 text-center border-r border-white/5">
+              <div class="stat-num text-3xl font-extrabold text-brand-green tracking-tighter font-mono" data-target="200" data-prefix="+">+0</div>
+              <div class="text-[10px] text-white/50 uppercase tracking-[0.1em] mt-1 font-bold">Clientes</div>
             </div>
-            <div class="stat-item">
-              <div class="stat-num" data-target="500" data-prefix="+">+0</div>
-              <div class="stat-label">Instalações</div>
+            <div class="p-6 text-center border-r border-white/5">
+              <div class="stat-num text-3xl font-extrabold text-brand-green tracking-tighter font-mono" data-target="500" data-prefix="+">+0</div>
+              <div class="text-[10px] text-white/50 uppercase tracking-[0.1em] mt-1 font-bold">Instalações</div>
             </div>
-            <div class="stat-item">
-              <div class="stat-num" data-target="5" data-prefix="">0</div>
-              <div class="stat-label">Anos no Mercado</div>
+            <div class="p-6 text-center">
+              <div class="stat-num text-3xl font-extrabold text-brand-green tracking-tighter font-mono" data-target="5" data-prefix="">0</div>
+              <div class="text-[10px] text-white/50 uppercase tracking-[0.1em] mt-1 font-bold">Anos XP</div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Slide 2 -->
-      <div class="carousel-slide" id="slide-1" role="group" aria-label="Slide 2 de 3">
-        <div class="carousel-slide-bg"
-          style="background-image:linear-gradient(160deg,rgba(10,10,15,0.72) 0%,rgba(10,10,15,0.85) 100%),url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&h=1080&fit=crop')">
-        </div>
-        <div class="carousel-overlay"></div>
-        <div class="orb" style="width:420px;height:420px;top:-60px;left:-60px;background:#22c55e;animation-delay:-3s">
-        </div>
-        <div class="carousel-content">
-          <div style="margin-bottom:22px">
-            <span
-              style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:99px;border:0.5px solid rgba(34,197,94,0.28);background:rgba(34,197,94,0.07);font-size:11px;color:var(--green);font-weight:600;letter-spacing:.07em;text-transform:uppercase;font-family:'JetBrains Mono',monospace">
-              <span
-                style="width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2.2s ease-out infinite"></span>
-              Soluções Comerciais
-            </span>
-          </div>
-          <h1
-            style="font-size:clamp(32px,5.5vw,62px);font-weight:800;line-height:1.1;letter-spacing:-.03em;color:var(--text);margin:0 0 22px">
-            Seu espaço pode oferecer carregamento<br>
-            <span style="color:var(--green)">e atrair mais clientes</span>
+      <div class="carousel-slide" id="slide-1">
+        <div class="carousel-slide-bg" style="background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&h=1080&fit=crop')"></div>
+        <div class="absolute inset-0 bg-brand-bg/80"></div>
+        <div class="relative z-10 max-w-[900px] mx-auto px-6 py-20 text-center w-full">
+          <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-brand-green/30 bg-brand-green/10 text-[11px] text-brand-green font-bold tracking-widest uppercase font-mono mb-8">
+            Setor Corporativo
+          </span>
+          <h1 class="text-[clamp(34px,6vw,68px)] font-extrabold leading-[1.05] tracking-tight text-brand-text mb-8">
+            Infraestrutura para frotas<br>
+            <span class="text-brand-green">e condomínios</span>
           </h1>
-          <p
-            style="font-size:clamp(15px,2vw,18px);color:var(--muted);max-width:580px;margin:0 auto 36px;line-height:1.75">
-            Transformamos seu negócio em um ponto de recarga completo.
+          <p class="text-[clamp(16px,2vw,19px)] text-white/70 max-w-[620px] mx-auto mb-10 leading-relaxed">
+            Gestão balanceada de carga e telemetria para empreendimentos de grande porte.
           </p>
-          <div style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap">
-            <a href="https://wa.me/5512981039845" target="_blank" rel="noopener noreferrer" class="btn-primary pulse">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-              </svg>
-              Falar com especialista
+           <a href="https://wa.me/5512981039845" target="_blank" rel="noopener noreferrer" 
+               class="bg-brand-green text-brand-bg font-bold py-4 px-10 rounded-2xl hover:brightness-110 active:scale-95 transition-all shadow-xl shadow-brand-green/20">
+              Falar com Engenheiro
             </a>
-          </div>
         </div>
       </div>
 
       <!-- Slide 3 -->
-      <div class="carousel-slide" id="slide-2" role="group" aria-label="Slide 3 de 3">
-        <div class="carousel-slide-bg"
-          style="background-image:linear-gradient(160deg,rgba(10,10,15,0.72) 0%,rgba(10,10,15,0.85) 100%),url('https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=1920&h=1080&fit=crop')">
-        </div>
-        <div class="carousel-overlay"></div>
-        <div class="orb"
-          style="width:360px;height:360px;bottom:-60px;right:-40px;background:#22c55e;animation-delay:-7s"></div>
-        <div class="carousel-content">
-          <div style="margin-bottom:22px">
-            <span
-              style="display:inline-flex;align-items:center;gap:8px;padding:6px 16px;border-radius:99px;border:0.5px solid rgba(34,197,94,0.28);background:rgba(34,197,94,0.07);font-size:11px;color:var(--green);font-weight:600;letter-spacing:.07em;text-transform:uppercase;font-family:'JetBrains Mono',monospace">
-              <span
-                style="width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2.2s ease-out infinite"></span>
-              Documentação Técnica
-            </span>
-          </div>
-          <h1
-            style="font-size:clamp(32px,5.5vw,62px);font-weight:800;line-height:1.1;letter-spacing:-.03em;color:var(--text);margin:0 0 22px">
-            Laudos e Relatórios<br>
-            <span style="color:var(--green)">Técnicos</span>
+      <div class="carousel-slide" id="slide-2">
+        <div class="carousel-slide-bg" style="background-image:url('https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=1920&h=1080&fit=crop')"></div>
+        <div class="absolute inset-0 bg-brand-bg/85"></div>
+        <div class="relative z-10 max-w-[900px] mx-auto px-6 py-20 text-center w-full">
+          <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-brand-green/30 bg-brand-green/10 text-[11px] text-brand-green font-bold tracking-widest uppercase font-mono mb-8">
+            Engenharia Legal
+          </span>
+          <h1 class="text-[clamp(34px,6vw,68px)] font-extrabold leading-[1.05] tracking-tight text-brand-text mb-8">
+            Projetos, Laudos e<br>
+            <span class="text-brand-green">Certificação ART</span>
           </h1>
-          <p
-            style="font-size:clamp(15px,2vw,18px);color:var(--muted);max-width:580px;margin:0 auto 36px;line-height:1.75">
-            Garantia de normas atendidas e total suporte na documentação.
+          <p class="text-[clamp(16px,2vw,19px)] text-white/70 max-w-[620px] mx-auto mb-10 leading-relaxed">
+            Estamos prontos para atender todas as normas da NBR 5410 com segurança jurídica.
           </p>
-          <div style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap">
-            <a href="https://wa.me/5512981039845" target="_blank" rel="noopener noreferrer" class="btn-primary pulse">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-              </svg>
-              Falar com especialista
+           <a href="https://wa.me/5512981039845" target="_blank" rel="noopener noreferrer" 
+               class="bg-brand-green text-brand-bg font-bold py-4 px-10 rounded-2xl hover:brightness-110 active:scale-95 transition-all shadow-xl shadow-brand-green/20">
+              Solicitar Orçamento
             </a>
-          </div>
         </div>
       </div>
 
-      <!-- Arrow Controls -->
-      <button class="carousel-arrow prev" id="carousel-prev" aria-label="Slide anterior">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round">
-          <polyline points="15 18 9 12 15 6" />
-        </svg>
+      <!-- Controls -->
+      <button id="carousel-prev" class="absolute left-5 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full border border-brand-green/20 bg-brand-green/5 text-brand-green flex items-center justify-center hover:bg-brand-green/20 transition-all">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" /></svg>
       </button>
-      <button class="carousel-arrow next" id="carousel-next" aria-label="Próximo slide">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-          stroke-linecap="round">
-          <polyline points="9 18 15 12 9 6" />
-        </svg>
+      <button id="carousel-next" class="absolute right-5 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full border border-brand-green/20 bg-brand-green/5 text-brand-green flex items-center justify-center hover:bg-brand-green/20 transition-all">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
       </button>
 
       <!-- Dots -->
-      <div class="carousel-dots" role="tablist" aria-label="Slides">
-        <button class="carousel-dot active" id="dot-0" aria-label="Slide 1" role="tab" aria-selected="true"></button>
-        <button class="carousel-dot" id="dot-1" aria-label="Slide 2" role="tab" aria-selected="false"></button>
-        <button class="carousel-dot" id="dot-2" aria-label="Slide 3" role="tab" aria-selected="false"></button>
+      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2.5 z-20">
+        <button id="dot-0" class="carousel-dot active bg-white/20 w-2.5 h-2.5 rounded-full transition-all" aria-selected="true" role="tab"></button>
+        <button id="dot-1" class="carousel-dot bg-white/20 w-2.5 h-2.5 rounded-full transition-all" aria-selected="false" role="tab"></button>
+        <button id="dot-2" class="carousel-dot bg-white/20 w-2.5 h-2.5 rounded-full transition-all" aria-selected="false" role="tab"></button>
       </div>
     </div>
   </header>
 
   <!-- TRUST BAR -->
-  <div class="trust-bar">
-    <div class="trust-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-        stroke-linejoin="round">
-        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
+  <div class="bg-brand-bg2/90 border-y border-white/5 flex flex-wrap justify-center backdrop-blur-sm overflow-hidden">
+    <div class="flex items-center gap-2.5 px-7 py-4 border-r border-white/5 text-[12px] font-semibold text-brand-muted whitespace-nowrap">
+      <svg class="w-4.5 h-4.5 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
       NBR 5410 certificado
     </div>
-    <div class="trust-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-        stroke-linejoin="round">
-        <path d="M12 14l9-5-9-5-9 5 9 5z" />
-        <path d="M12 14l6.16-3.422A12.083 12.083 0 0122 19.5H2a12.083 12.083 0 013.84-8.922L12 14z" />
-      </svg>
-      Eng. Elétrico responsável
+    <div class="flex items-center gap-2.5 px-7 py-4 border-r border-white/5 text-[12px] font-semibold text-brand-muted whitespace-nowrap">
+      <svg class="w-4.5 h-4.5 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 14l9-5-9-5-9 5 9 5z" /><path d="M12 14l6.16-3.422A12.083 12.083 0 0122 19.5H2a12.083 12.083 0 013.84-8.922L12 14z" /></svg>
+      Eng. Elétrico Responsável
     </div>
-    <div class="trust-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-        stroke-linejoin="round">
-        <path
-          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-      </svg>
+    <div class="flex items-center gap-2.5 px-7 py-4 border-r border-white/5 text-[12px] font-semibold text-brand-muted whitespace-nowrap">
+      <svg class="w-4.5 h-4.5 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
       Projeto + ART incluso
     </div>
-    <div class="trust-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-        stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <polyline points="12 6 12 12 16 14" />
-      </svg>
-      Resposta em até 24h
+    <div class="flex items-center gap-2.5 px-7 py-4 border-r border-white/5 text-[12px] font-semibold text-brand-muted whitespace-nowrap">
+      <svg class="w-4.5 h-4.5 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+      Resposta em 24h
     </div>
-    <div class="trust-item">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-        stroke-linejoin="round">
-        <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-        <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-      </svg>
+    <div class="flex items-center gap-2.5 px-7 py-4 text-[12px] font-semibold text-brand-muted whitespace-nowrap">
+      <svg class="w-4.5 h-4.5 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
       Vale do Paraíba
     </div>
   </div>
 
   <div class="voltage-line"></div>
 
-  <!-- ═══════════════════════════════════════════════════
-     SEÇÃO: SERVIÇOS PRINCIPAIS (ESPECIALIDADES REDESIGN)
-══════════════════════════════════════════════════════ -->
-  <section id="servicos" style="background:#ffffff;">
-    <div class="section-inner">
-      <div class="text-center mb-14 observe">
-        <p class="section-eyebrow">Soluções</p>
-        <h2 class="section-title" style="color:var(--text-dark)">Cada Detalhe, Feita com Precisão</h2>
-        <p style="font-size:16px;color:#555;max-width:560px;margin:16px auto 0;line-height:1.75">
-          Do carregador a geração de energia própria, somos o parceiro técnico ideal para a transição.
-        </p>
+  <!-- SERVIÇOS -->
+  <section id="servicos" class="bg-white py-24 px-6">
+    <div class="max-w-[1200px] mx-auto">
+      <div class="text-center mb-16 observe">
+        <p class="text-[12px] font-mono font-bold uppercase tracking-[0.2em] text-brand-green mb-4">Especialidades</p>
+        <h2 class="text-4xl font-extrabold text-[#1a1a24] tracking-tight mb-5">Cada Detalhe, Com Precisão</h2>
+        <p class="text-slate-500 max-w-xl mx-auto text-lg leading-relaxed font-medium">Do carregador à geração própria, somos o parceiro técnico ideal para sua transição.</p>
       </div>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px" class="observe">
-
-        <!-- Seção 2: Venda de Carregadores -->
-        <div class="serv-horiz-card">
-          <div class="serv-horiz-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-              stroke-linejoin="round">
-              <rect x="2" y="7" width="20" height="14" rx="2" />
-              <path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" />
-              <path d="M12 11v4" />
-            </svg>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 observe">
+        <!-- Venda -->
+        <div class="p-8 bg-[#f8fafc] border border-slate-200 rounded-[32px] hover:border-brand-green/40 hover:bg-white hover:shadow-2xl hover:shadow-brand-green/5 transition-all duration-500 group">
+          <div class="w-14 h-14 bg-brand-green/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <svg class="w-7 h-7 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16" /></svg>
           </div>
-          <div class="serv-horiz-body">
-            <div class="svc-tag">Produtos</div>
-            <div class="serv-horiz-title">Venda de Carregadores e Acessórios</div>
-            <div class="serv-horiz-desc">Tecnologia avançada em infraestrutura para recarga com curadoria de excelência.
-              Encontre um ecossistema abrangente de soluções Intelbras, E-Wolf ou Incharging para a sua residência.
-            </div>
-            <a href="https://wa.me/5512981039845" target="_blank" rel="noopener noreferrer" class="svc-cta">Falar com
-              especialista →</a>
-          </div>
+          <span class="text-[11px] font-bold text-brand-green uppercase tracking-widest">Produtos</span>
+          <h3 class="text-xl font-bold text-[#1a1a24] mt-2 mb-3">Venda de Carregadores</h3>
+          <p class="text-slate-500 leading-relaxed text-[14.5px]">Curadoria de excelência Intelbras, E-Wolf e Incharging.</p>
+          <a href="https://wa.me/5512981039845" class="inline-flex items-center gap-2 mt-7 text-[13px] font-bold text-brand-green border border-brand-green/20 px-5 py-2 rounded-xl hover:bg-brand-green/5 transition-colors">
+            Falar com Especialista
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </a>
         </div>
 
-        <!-- Seção 3: Instalação e Manutenção -->
-        <div class="serv-horiz-card">
-          <div class="serv-horiz-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-              stroke-linejoin="round">
-              <path
-                d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" />
-            </svg>
+        <!-- Instalação -->
+        <div class="p-8 bg-[#f8fafc] border border-slate-200 rounded-[32px] hover:border-brand-green/40 hover:bg-white hover:shadow-2xl hover:shadow-brand-green/5 transition-all duration-500 group">
+          <div class="w-14 h-14 bg-brand-green/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <svg class="w-7 h-7 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" /></svg>
           </div>
-          <div class="serv-horiz-body">
-            <div class="svc-tag">Execução</div>
-            <div class="serv-horiz-title">Serviços de Instalação e Manutenção</div>
-            <div class="serv-horiz-desc">Proporcionamos metodologias especializadas para casas e condomínios com a
-              máxima segurança técnica. Execução impecável e focada na proteção integral da sua rede elétrica instalada.
-            </div>
-            <a href="https://wa.me/5512981039845" target="_blank" rel="noopener noreferrer" class="svc-cta">Falar com
-              especialista →</a>
-          </div>
+          <span class="text-[11px] font-bold text-brand-green uppercase tracking-widest">Execução</span>
+          <h3 class="text-xl font-bold text-[#1a1a24] mt-2 mb-3">Instalação e Manutenção</h3>
+          <p class="text-slate-500 leading-relaxed text-[14.5px]">Metodologias especializadas para casas e condomínios.</p>
+          <a href="https://wa.me/5512981039845" class="inline-flex items-center gap-2 mt-7 text-[13px] font-bold text-brand-green border border-brand-green/20 px-5 py-2 rounded-xl hover:bg-brand-green/5 transition-colors">Solicitar Orçamento</a>
         </div>
 
-        <!-- Seção 4: Laudos e Relatórios -->
-        <div class="serv-horiz-card">
-          <div class="serv-horiz-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-              stroke-linejoin="round">
-              <path
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
-            </svg>
+        <!-- Laudos -->
+        <div class="p-8 bg-[#f8fafc] border border-slate-200 rounded-[32px] hover:border-brand-green/40 hover:bg-white hover:shadow-2xl hover:shadow-brand-green/5 transition-all duration-500 group">
+          <div class="w-14 h-14 bg-brand-green/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <svg class="w-7 h-7 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
           </div>
-          <div class="serv-horiz-body">
-            <div class="svc-tag">Documentação</div>
-            <div class="serv-horiz-title">Laudos e Relatórios</div>
-            <div class="serv-horiz-desc">Nossa equipe realiza a elaboração detalhada de relatórios de conformidade
-              técnica e de laudos estruturais voltados para empreendimentos, viabilizando uso focado e sem intervenções.
-            </div>
-            <a href="https://wa.me/5512981039845" target="_blank" rel="noopener noreferrer" class="svc-cta">Falar com
-              especialista →</a>
-          </div>
+          <span class="text-[11px] font-bold text-brand-green uppercase tracking-widest">Documentação</span>
+          <h3 class="text-xl font-bold text-[#1a1a24] mt-2 mb-3">Laudos e Relatórios</h3>
+          <p class="text-slate-500 leading-relaxed text-[14.5px]">Conformidade técnica detalhada para uso seguro.</p>
+          <a href="https://wa.me/5512981039845" class="inline-flex items-center gap-2 mt-7 text-[13px] font-bold text-brand-green border border-brand-green/20 px-5 py-2 rounded-xl hover:bg-brand-green/5 transition-colors">Ver Mais</a>
         </div>
 
-        <!-- Seção 5: Projetos e Consultoria -->
-        <div class="serv-horiz-card">
-          <div class="serv-horiz-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-              stroke-linejoin="round">
-              <circle cx="12" cy="12" r="3" />
-              <path
-                d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41M12 2v2M12 20v2M2 12h2M20 12h2" />
-            </svg>
+        <!-- Projetos -->
+        <div class="p-8 bg-[#f8fafc] border border-slate-200 rounded-[32px] hover:border-brand-green/40 hover:bg-white hover:shadow-2xl hover:shadow-brand-green/5 transition-all duration-500 group">
+          <div class="w-14 h-14 bg-brand-green/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <svg class="w-7 h-7 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3" /><path d="M19.07 4.93l-1.41 1.41M4.93 4.93l1.41 1.41M4.93 19.07l1.41-1.41M19.07 19.07l-1.41-1.41M12 2v2M12 20v2M2 12h2M20 12h2" /></svg>
           </div>
-          <div class="serv-horiz-body">
-            <div class="svc-tag">Estratégia</div>
-            <div class="serv-horiz-title">Projetos e Consultoria</div>
-            <div class="serv-horiz-desc">Planejamento elétrico sem complicação alguma. Desenvolvemos o dimensionamento
-              focado na capacidade estrutural e escalabilidade fotovoltaica. Não se preocupe, fazemos tudo por você.
-            </div>
-            <a href="https://wa.me/5512981039845" target="_blank" rel="noopener noreferrer" class="svc-cta">Falar com
-              especialista →</a>
-          </div>
+          <span class="text-[11px] font-bold text-brand-green uppercase tracking-widest">Estratégia</span>
+          <h3 class="text-xl font-bold text-[#1a1a24] mt-2 mb-3">Projetos e Consultoria</h3>
+          <p class="text-slate-500 leading-relaxed text-[14.5px]">Planejamento elétrico focado em escalabilidade.</p>
+          <a href="https://wa.me/5512981039845" class="inline-flex items-center gap-2 mt-7 text-[13px] font-bold text-brand-green border border-brand-green/20 px-5 py-2 rounded-xl hover:bg-brand-green/5 transition-colors">Consultoria</a>
         </div>
 
-        <!-- Seção 6: Análise e Gerenciamento de Cargas -->
-        <div class="serv-horiz-card">
-          <div class="serv-horiz-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-              stroke-linejoin="round">
-              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-            </svg>
+        <!-- Análise -->
+        <div class="p-8 bg-[#f8fafc] border border-slate-200 rounded-[32px] hover:border-brand-green/40 hover:bg-white hover:shadow-2xl hover:shadow-brand-green/5 transition-all duration-500 group">
+          <div class="w-14 h-14 bg-brand-green/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <svg class="w-7 h-7 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></svg>
           </div>
-          <div class="serv-horiz-body">
-            <div class="svc-tag">Tecnologia</div>
-            <div class="serv-horiz-title">Análise e Gerenciamento de Cargas</div>
-            <div class="serv-horiz-desc">Aplicamos equipamentos que atuam regulando a potência disponível totalizada,
-              controlando ativamente o balanceamento entre os carregadores conectados de forma contínua e inteligente.
-            </div>
-            <a href="https://wa.me/5512981039845" target="_blank" rel="noopener noreferrer" class="svc-cta">Falar com
-              especialista →</a>
+          <span class="text-[11px] font-bold text-brand-green uppercase tracking-widest">Tecnologia</span>
+          <h3 class="text-xl font-bold text-[#1a1a24] mt-2 mb-3">Gestão de Cargas</h3>
+          <p class="text-slate-500 leading-relaxed text-[14.5px]">Controle ativo do balanceamento entre carregadores.</p>
+          <a href="https://wa.me/5512981039845" class="inline-flex items-center gap-2 mt-7 text-[13px] font-bold text-brand-green border border-brand-green/20 px-5 py-2 rounded-xl hover:bg-brand-green/5 transition-colors">Saber Mais</a>
+        </div>
+
+        <!-- Solar -->
+        <div class="p-8 bg-brand-green/5 border border-brand-green/20 rounded-[32px] hover:border-brand-green/50 hover:bg-white hover:shadow-2xl hover:shadow-brand-green/10 transition-all duration-500 group">
+          <div class="w-14 h-14 bg-brand-green/10 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+            <svg class="w-7 h-7 text-brand-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>
           </div>
-        </div>
-
-        <!-- Seção 7: Energia Solar -->
-        <div class="serv-horiz-card featured" style="border-color:rgba(34,197,94,0.4);background:rgba(34,197,94,0.03)">
-          <div class="serv-horiz-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-              stroke-linejoin="round">
-              <circle cx="12" cy="12" r="5" />
-              <line x1="12" y1="1" x2="12" y2="3" />
-              <line x1="12" y1="21" x2="12" y2="23" />
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-              <line x1="1" y1="12" x2="3" y2="12" />
-              <line x1="21" y1="12" x2="23" y2="12" />
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-            </svg>
-          </div>
-          <div class="serv-horiz-body">
-            <div class="svc-badge">Sustentabilidade</div>
-            <div class="svc-tag">Energia Limpa</div>
-            <div class="serv-horiz-title">Energia Solar</div>
-            <div class="serv-horiz-desc">Implementação e configuração de microgerador focados em mitigar o consumo
-              automotivo. Traga forte autonomia e redução direta aplicáveis em sua conta final com viés de sustentação.
-            </div>
-            <a href="https://wa.me/5512981039845" target="_blank" rel="noopener noreferrer" class="svc-cta">Falar com
-              especialista →</a>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-
-  <div class="voltage-line"></div>
-
-  <!-- ═══════════════════════════════════════════════════
-     SEÇÃO: DIFERENCIAIS (Bento Grid)
-══════════════════════════════════════════════════════ -->
-  <section id="o-que-faz" style="background:var(--bg);">
-    <div class="section-inner">
-      <div style="text-align:center;margin-bottom:48px" class="observe">
-        <p class="section-eyebrow">Diferenciais</p>
-        <h2 class="section-title">O que a VoltchZ faz?</h2>
-        <p style="font-size:16px;color:var(--muted);max-width:560px;margin:16px auto 0;line-height:1.75">
-          Apresentamos nossos pilares de excelência técnica
-        </p>
-      </div>
-      <div class="bento-grid observe">
-        <div class="bento-card">
-          <div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-              <polyline points="9 22 9 12 15 12 15 22" />
-            </svg></div>
-          <div class="bento-title">Foco na Segurança</div>
-          <div style="font-size:13.5px;color:rgba(255,255,255,0.7)">Proteção total do seu patrimônio e rede.</div>
-        </div>
-        <div class="bento-card">
-          <div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 9h18v10a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-              <path d="M3 9l2-4h14l2 4" />
-            </svg></div>
-          <div class="bento-title">Escalabilidade</div>
-          <div style="font-size:13.5px;color:rgba(255,255,255,0.7)">Sistemas prontos para expansão de frota.</div>
-        </div>
-        <div class="bento-card">
-          <div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="2" />
-              <path d="M9 3v18M3 9h6M3 15h6" />
-            </svg></div>
-          <div class="bento-title">Gestão de Carga</div>
-          <div style="font-size:13.5px;color:rgba(255,255,255,0.7)">Equilíbrio dinâmico de potência ativa.</div>
-        </div>
-        <div class="bento-card">
-          <div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2" />
-            </svg></div>
-          <div class="bento-title">Normas Técnicas</div>
-          <div style="font-size:13.5px;color:rgba(255,255,255,0.7)">Conformidade rigorosa com a NBR 5410.</div>
-        </div>
-        <div class="bento-card">
-          <div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" />
-            </svg></div>
-          <div class="bento-title">Suporte Remoto</div>
-          <div style="font-size:13.5px;color:rgba(255,255,255,0.7)">Monitoramento e diagnósticos digitais.</div>
-        </div>
-        <div class="bento-card">
-          <div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="3" width="20" height="14" rx="2" />
-              <line x1="8" y1="21" x2="16" y2="21" />
-              <line x1="12" y1="17" x2="12" y2="21" />
-            </svg></div>
-          <div class="bento-title">Eficiência Energética</div>
-          <div style="font-size:13.5px;color:rgba(255,255,255,0.7)">Melhor aproveitamento da rede elétrica.</div>
-        </div>
-        <div class="bento-card">
-          <div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3" />
-              <line x1="12" y1="17" x2="12.01" y2="17" />
-            </svg></div>
-          <div class="bento-title">Consultoria Técnica</div>
-          <div style="font-size:13.5px;color:rgba(255,255,255,0.7)">Projetos sob medida por especialistas.</div>
-        </div>
-        <div class="bento-card">
-          <div class="bento-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="5" />
-              <line x1="12" y1="1" x2="12" y2="3" />
-              <line x1="12" y1="21" x2="12" y2="23" />
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-              <line x1="1" y1="12" x2="3" y2="12" />
-              <line x1="21" y1="12" x2="23" y2="12" />
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-            </svg></div>
-          <div class="bento-title">Visão de Futuro</div>
-          <div style="font-size:13.5px;color:rgba(255,255,255,0.7)">Pronto para as próximas tecnologias EV.</div>
+          <span class="inline-block bg-brand-green/20 text-[10px] font-bold px-2.5 py-0.5 rounded-full text-brand-green mb-1 uppercase tracking-widest">Sustentável</span>
+          <h3 class="text-xl font-bold text-[#1a1a24] mt-2 mb-3">Energia Solar</h3>
+          <p class="text-slate-500 leading-relaxed text-[14.5px]">Implementação focado em mitigar o consumo veicular.</p>
+          <a href="https://wa.me/5512981039845" class="inline-flex items-center gap-2 mt-7 text-[13px] font-bold text-brand-green border border-brand-green/20 px-5 py-2 rounded-xl hover:bg-brand-green/5 transition-colors">Orçamento</a>
         </div>
       </div>
     </div>
@@ -1992,545 +311,190 @@
 
   <div class="voltage-line"></div>
 
-  <!-- ═══════════════════════════════════════════════════
-     SEÇÃO: SOBRE A VOLTCHZ (Bio, Processo, Identidade)
-══════════════════════════════════════════════════════ -->
-  <section id="sobre" style="background:#0d0d14;">
-    <div class="section-inner observe">
+  <!-- DIFERENCIAIS BENTO -->
+  <section id="o-que-faz" class="bg-brand-bg py-28 px-6 relative overflow-hidden text-white">
+    <div class="max-w-[1200px] mx-auto relative z-10">
+      <div class="text-center mb-20 observe">
+        <p class="text-[12px] font-mono font-bold uppercase tracking-[0.2em] text-brand-green mb-4">DNA Técnico</p>
+        <h2 class="text-4xl font-extrabold tracking-tight mb-5">O que define a VoltchZ?</h2>
+        <p class="text-brand-muted max-w-xl mx-auto text-lg leading-relaxed">Nossos pilares de excelência técnica e rigor em engenharia.</p>
+      </div>
 
-      <!-- Perfil e História -->
-      <div class="quem-somos-grid" style="margin-bottom:80px">
-        <div class="founder-image-wrapper">
-          <img src="IMAGENS/bruno.png" alt="Bruno, Fundador da VoltchZ" loading="lazy">
-          <div class="founder-badge">
-            <div class="founder-name" style="color:#fff;">Bruno</div>
-            <div class="founder-role" style="margin-bottom:8px;">Eng. Eletricista · CEO</div>
-            <div class="creds-row" style="margin:0;">
-              <span class="cred-pill"
-                style="border-color:rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); color:#fff">INATEL</span>
-              <span class="cred-pill"
-                style="border-color:rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); color:#fff">Mestrado
-                UNIFESP</span>
-              <span class="cred-pill"
-                style="border-color:rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); color:#fff">Doutorando
-                ITA</span>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 observe">
+        <div class="p-8 bg-white/5 border border-white/10 rounded-[32px] hover:bg-white/10 transition-all group">
+          <div class="mb-5 text-brand-green group-hover:scale-110 transition-transform">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
+          </div>
+          <h4 class="text-lg font-bold mb-2">Máxima Segurança</h4>
+          <p class="text-brand-muted text-[14px]">Proteção integral do seu imóvel e rede elétrica instalada.</p>
+        </div>
+        <div class="p-8 bg-white/5 border border-white/10 rounded-[32px] hover:bg-white/10 transition-all group">
+          <div class="mb-5 text-brand-green group-hover:scale-110 transition-transform">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M9 3v18M3 9h6M3 15h6" /></svg>
+          </div>
+          <h4 class="text-lg font-bold mb-2">Escalabilidade</h4>
+          <p class="text-brand-muted text-[14px]">Sistemas prontos para expansão futura de frotas EVs.</p>
+        </div>
+        <div class="p-8 bg-white/5 border border-white/10 rounded-[32px] hover:bg-white/10 transition-all group">
+          <div class="mb-5 text-brand-green group-hover:scale-110 transition-transform">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></svg>
+          </div>
+          <h4 class="text-lg font-bold mb-2">Suporte Remoto</h4>
+          <p class="text-brand-muted text-[14px]">Monitoramento e diagnóstico digital de infraestrutura.</p>
+        </div>
+        <div class="p-8 bg-white/5 border border-white/10 rounded-[32px] hover:bg-white/10 transition-all group">
+          <div class="mb-5 text-brand-green group-hover:scale-110 transition-transform">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2" /></svg>
+          </div>
+          <h4 class="text-lg font-bold mb-2">NBR 5410</h4>
+          <p class="text-brand-muted text-[14px]">Conformidade absoluta com as normas brasileiras.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOBRE -->
+  <section id="sobre" class="bg-brand-bg2 py-28 px-6">
+    <div class="max-w-[1200px] mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center observe">
+        <div class="relative group">
+          <div class="rounded-[48px] overflow-hidden shadow-2xl shadow-brand-green/20">
+            <img src="IMAGENS/bruno.png" alt="Bruno, Fundador da VoltchZ" class="w-full transform group-hover:scale-105 transition-transform duration-700">
+          </div>
+          <div class="absolute -bottom-8 -right-8 bg-brand-bg p-8 rounded-3xl border border-white/10 shadow-2xl backdrop-blur-xl max-w-[280px]">
+            <h4 class="text-brand-green font-extrabold text-xl mb-1">Bruno, CEO</h4>
+            <p class="text-[12px] text-brand-muted mb-4 font-mono font-semibold uppercase tracking-widest">Eng. Eletricista ITA/Inatel</p>
+            <div class="flex gap-2 flex-wrap text-brand-text">
+              <span class="text-[10px] font-bold px-3 py-1 bg-brand-green/10 border border-brand-green/20 rounded-full">MESTRE UNIFESP</span>
+              <span class="text-[10px] font-bold px-3 py-1 bg-brand-green/10 border border-brand-green/20 rounded-full">DOC ITA</span>
             </div>
           </div>
         </div>
         <div>
-          <p class="section-eyebrow" style="color:var(--green)">Fundação</p>
-          <h2 class="section-title" style="margin-bottom:24px">Conheça a <span style="color:var(--green)">VoltchZ</span>
-          </h2>
-          <p style="font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:20px">A Voltchz nasceu a partir da
-            profunda experiência técnica do engenheiro eletricista Bruno, formado pelo INATEL, com mestrado em inovação
-            tecnológica pela UNIFESP e doutorando pelo ITA.</p>
-          <p style="font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:32px">Ao longo da sua trajetória,
-            atuou em projetos complexos de engenharia para grandes empresas nacionais e multinacionais. Hoje, aplica
-            todo esse conhecimento para entregar soluções completas em mobilidade elétrica, com foco em segurança,
-            eficiência e execução de classe global.</p>
-          <div class="founder-quote" style="border-top:1px solid rgba(255,255,255,0.08); padding-top:24px;">
-            <p style="font-size:16px;font-weight:600;color:var(--green);line-height:1.6">"Mais do que instalar
-              carregadores, a Voltchz projeta soluções que funcionam de verdade, resguardando o seu patrimônio."</p>
+          <span class="text-brand-green font-mono font-bold text-[13px] uppercase tracking-[0.3em] mb-6 block">Nossa História</span>
+          <h2 class="text-4xl sm:text-5xl font-extrabold mb-8 leading-[1.1] tracking-tight">Fusão entre Ciência e <span class="text-brand-green">Mobilidade</span></h2>
+          <p class="text-brand-muted text-lg mb-8 leading-relaxed">
+            A VoltchZ nasceu da visão estratégica do Bruno, mestre em inovação e doutorando pelo ITA. Trazemos o rigor técnico da academia para a execução prática no mundo real.
+          </p>
+          <div class="space-y-6 text-brand-muted leading-relaxed text-base mb-10">
+            <p>Atendemos desde projetos domésticos premium até complexas redes de frotas corporativas, sempre com ART e documentação técnica completa.</p>
+          </div>
+          <div class="p-8 bg-brand-green/5 border-l-[6px] border-brand-green rounded-r-3xl italic text-brand-green font-bold text-lg leading-relaxed shadow-lg shadow-brand-green/5">
+            "Não instalamos apenas carregadores. Projetamos a viabilidade de um futuro mais limpo com segurança técnica absoluta."
           </div>
         </div>
       </div>
-
-      <!-- Como Funciona -->
-      <div
-        style="background:rgba(255,255,255,0.03); border-radius:32px; padding:48px; border:1px solid rgba(255,255,255,0.05); margin-bottom:80px">
-        <div style="text-align:center;margin-bottom:40px">
-          <p class="section-eyebrow">Metodologia</p>
-          <h2 class="section-title" style="font-size:28px">Como entregamos excelência</h2>
-        </div>
-        <div class="process-list"
-          style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:32px">
-          <div class="process-step">
-            <div class="step-num">01</div>
-            <div class="step-body">
-              <div class="step-title" style="color:#fff">Orçamento</div>
-              <div class="step-desc">Via WhatsApp ou e-mail com resposta em até 24h úteis</div>
-            </div>
-          </div>
-          <div class="process-step">
-            <div class="step-num">02</div>
-            <div class="step-body">
-              <div class="step-title" style="color:#fff">Visita</div>
-              <div class="step-desc">Análise de carga e levantamento completo no local</div>
-            </div>
-          </div>
-          <div class="process-step">
-            <div class="step-num">03</div>
-            <div class="step-body">
-              <div class="step-title" style="color:#fff">Projeto</div>
-              <div class="step-desc">Execução profissional com ART e toda a documentação</div>
-            </div>
-          </div>
-          <div class="process-step">
-            <div class="step-num">04</div>
-            <div class="step-body">
-              <div class="step-title" style="color:#fff">Suporte</div>
-              <div class="step-desc">Manutenção preventiva e assistência técnica pós-instalação</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Identidade (MVV) -->
-      <div>
-        <div style="text-align:center;margin-bottom:48px">
-          <p class="section-eyebrow" style="color:var(--green)">Identidade</p>
-          <h2 class="section-title">Missão, Visão e Valores</h2>
-        </div>
-        <div class="mvv-grid">
-          <div class="mvv-card" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06)">
-            <div class="mvv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
-                <polyline points="22 4 12 14.01 9 11.01" />
-              </svg></div>
-            <div class="mvv-label">Missão</div>
-            <div class="mvv-title" style="color:#fff">Nossa Razão de Existir</div>
-            <div class="mvv-text">Entregar soluções completas em mobilidade elétrica com segurança técnica, facilitando
-              a transição sustentável.</div>
-          </div>
-          <div class="mvv-card" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06)">
-            <div class="mvv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="8" x2="12" y2="12" />
-                <line x1="12" y1="16" x2="12.01" y2="16" />
-              </svg></div>
-            <div class="mvv-label">Visão</div>
-            <div class="mvv-title" style="color:#fff">Onde Queremos Chegar</div>
-            <div class="mvv-text">Ser referência nacional em infraestrutura de recarga VE, reconhecida pela inovação e
-              excelência na execução.</div>
-          </div>
-          <div class="mvv-card" style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06)">
-            <div class="mvv-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path
-                  d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg></div>
-            <div class="mvv-label">Valores</div>
-            <div class="mvv-title" style="color:#fff">O que nos Guia</div>
-            <ul class="valores-list" style="color:var(--muted)">
-              <li>Segurança em primeiro lugar</li>
-              <li>Excelência técnica</li>
-              <li>Inovação constante</li>
-              <li>Transparência total</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
     </div>
   </section>
 
-  <div class="voltage-line"></div>
-
-
-
-  <!-- Nossos Clientes Slider -->
-  <section id="clientes" style="background:#ffffff;">
-    <div class="section-inner observe">
-      <div style="text-align:center;">
-        <p class="section-eyebrow">Parceiros</p>
-        <h2 class="section-title" style="color:var(--text-dark);">Nossos <span
-            style="color:var(--green)">Clientes</span></h2>
+  <!-- CLIENTES SLIDER -->
+  <section id="clientes" class="bg-white py-28 px-6">
+    <div class="max-w-[1200px] mx-auto">
+      <div class="text-center mb-20 observe">
+        <p class="text-brand-green font-mono font-bold text-[12px] uppercase tracking-[0.2em] mb-4">Sucesso</p>
+        <h2 class="text-4xl font-extrabold text-[#1a1a24] tracking-tight">Cases de Implementação</h2>
       </div>
 
-      <!-- Novo Slider JS -->
-      <div class="clients-slider-wrapper" id="clients-slider">
-        <!-- Slide 1 -->
-        <div class="client-slide active"
-          style="background-image:url('https://images.unsplash.com/photo-1617788138017-80ad40651399?w=1200&h=600&fit=crop');">
-          <div class="client-slide-content">
-            <h3 class="client-slide-title">Tesla Model S</h3>
-            <p class="client-slide-desc">Instalação residencial premium otimizada para alto desempenho contínuo.</p>
+      <div id="clients-slider" class="relative items-end text-white">
+        <!-- Client Slides -->
+        <div class="client-slide active" style="background-image:url('https://images.unsplash.com/photo-1617788138017-80ad40651399?w=1200&h=600&fit=crop');">
+          <div class="client-slide-content max-w-xl">
+            <h3 class="text-3xl font-extrabold mb-3">Tesla Performance</h3>
+            <p class="text-[17px] text-white/80 leading-relaxed font-medium">Dimensionamento de rede dedicado com proteção contra surtos de alta velocidade.</p>
           </div>
         </div>
-        <!-- Slide 2 -->
-        <div class="client-slide"
-          style="background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=600&fit=crop');">
-          <div class="client-slide-content">
-            <h3 class="client-slide-title">BMW i4 para Frota Corporativa</h3>
-            <p class="client-slide-desc">Sistemas unificados para centro comercial garantindo reabastecimento eficiente.
-            </p>
+        <div class="client-slide" style="background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=600&fit=crop');">
+          <div class="client-slide-content max-w-xl">
+            <h3 class="text-3xl font-extrabold mb-3">Estações Corporativas</h3>
+            <p class="text-[17px] text-white/80 leading-relaxed font-medium">Infraestrutura múltipla para condomínios comerciais com faturamento individualizado.</p>
           </div>
         </div>
-        <!-- Slide 3 -->
-        <div class="client-slide"
-          style="background-image:url('https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=1200&h=600&fit=crop');">
-          <div class="client-slide-content">
-            <h3 class="client-slide-title">Porsche Taycan Turbo</h3>
-            <p class="client-slide-desc">Adaptação de sistema inteligente para demandas de altíssima tensão.</p>
-          </div>
-        </div>
-        <!-- Slide 4 -->
-        <div class="client-slide"
-          style="background-image:url('https://images.unsplash.com/photo-1621905251918-48416bd8575a?w=1200&h=600&fit=crop');">
-          <div class="client-slide-content">
-            <h3 class="client-slide-title">Infraestrutura Condominial</h3>
-            <p class="client-slide-desc">Elaboração de ART e balanceamento de carga para 40 vagas no Vale do Paraíba.
-            </p>
+        <div class="client-slide" style="background-image:url('https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=1200&h=600&fit=crop');">
+          <div class="client-slide-content max-w-xl">
+            <h3 class="text-3xl font-extrabold mb-3">Esportivos Elétricos</h3>
+            <p class="text-[17px] text-white/80 leading-relaxed font-medium">Adaptação dinâmica para carregadores de ultra-carga compatíveis com Porsche e Audi.</p>
           </div>
         </div>
 
-        <!-- Controls -->
-        <button class="client-slider-arrow prev" onclick="moveClientSlide(-1)" aria-label="Cliente anterior"><svg
-            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round">
-            <polyline points="15 18 9 12 15 6" />
-          </svg></button>
-        <button class="client-slider-arrow next" onclick="moveClientSlide(1)" aria-label="Próximo cliente"><svg
-            width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round">
-            <polyline points="9 18 15 12 9 6" />
-          </svg></button>
+        <!-- Dots -->
         <div class="client-slider-dots"></div>
       </div>
-
     </div>
   </section>
 
-  <div class="voltage-line"></div>
+  <!-- FAQ / CONTATO -->
+  <section id="contato" class="bg-brand-bg2 py-28 px-6">
+    <div class="max-w-[1200px] mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-20 observe">
+        <!-- FAQ Accordion -->
+        <div>
+          <span class="text-brand-green font-mono font-bold text-[12px] mb-4 uppercase tracking-[0.2em] block">Dúvidas</span>
+          <h2 class="text-4xl font-extrabold text-white mb-10 tracking-tight">Perguntas Frequentes</h2>
+          <div class="space-y-4">
+            <div class="faq-item border border-white/5 rounded-3xl overflow-hidden transition-all bg-white/[0.02] hover:border-white/10">
+              <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-6 text-left group">
+                <span class="font-bold text-lg text-white">É seguro carregar um carro em casa?</span>
+                <svg class="w-6 h-6 text-brand-green transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>
+              </button>
+              <div class="faq-answer px-6 pb-6 text-[15px] text-brand-muted leading-relaxed">
+                Sim, desde que a instalação utilize proteções DR e DPS certificadas pela NBR 5410, isolando qualquer risco de incêndio ou sobrecarga na rede residencial.
+              </div>
+            </div>
+            <div class="faq-item border border-white/5 rounded-3xl overflow-hidden transition-all bg-white/[0.02] hover:border-white/10">
+              <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-6 text-left group">
+                <span class="font-bold text-lg text-white">Preciso de autorização do condomínio?</span>
+                <svg class="w-6 h-6 text-brand-green transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>
+              </button>
+              <div class="faq-answer px-6 pb-6 text-[15px] text-brand-muted leading-relaxed">
+                A legislação brasileira já protege o direito de instalação. Fornecemos todo o dossiê técnico e a ART assinada pelo engenheiro para facilitar a sua aprovação.
+              </div>
+            </div>
+            <div class="faq-item border border-white/5 rounded-3xl overflow-hidden transition-all bg-white/[0.02] hover:border-white/10">
+              <button onclick="toggleFaq(this)" class="w-full flex items-center justify-between p-6 text-left group">
+                <span class="font-bold text-lg text-white">Quais regiões são atendidas?</span>
+                <svg class="w-6 h-6 text-brand-green transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9" /></svg>
+              </button>
+              <div class="faq-answer px-6 pb-6 text-[15px] text-brand-muted leading-relaxed">
+                Foco total no Vale do Paraíba (SJC e região) e litoral norte, podendo atuar na capital paulista sob consulta técnica prévia.
+              </div>
+            </div>
+          </div>
+        </div>
 
-  <!-- FAQ Unified with Contact -->
-  <section id="faq-contato" style="background:var(--bg2);">
-    <div class="section-inner">
-      <div style="margin-bottom:72px">
-        <div style="text-align:center;margin-bottom:40px">
-          <p class="section-eyebrow">Dúvidas</p>
-          <h2 class="section-title" style="color:var(--text)">Perguntas Frequentes</h2>
-        </div>
-        <div class="observe" id="faq-list" style="max-width:800px; margin:0 auto">
-          <div class="faq-item open">
-            <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="true"
-              style="color:var(--text); border-color:rgba(255,255,255,0.1)">
-              <span class="faq-q">É seguro carregar um carro elétrico em casa?</span>
-              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round">
-                <polyline points="18 15 12 9 6 15" />
-              </svg>
-            </button>
-            <div class="faq-answer open">
-              <div class="faq-answer-inner" style="color:var(--muted)">Sim, desde que a instalação seja feita por
-                profissionais qualificados e siga as normas técnicas (NBR 5410). A VoltchZ garante que cada instalação
-                passa por análise de carga, dimensionamento correto de proteções e aterramento adequado.</div>
-            </div>
+        <!-- Contato Form Card -->
+        <div class="flex flex-col h-full">
+          <div class="bg-gradient-to-br from-brand-green/15 to-transparent border border-brand-green/20 rounded-[48px] p-12 flex-grow text-center lg:text-left flex flex-col justify-center shadow-2xl shadow-brand-green/5 relative overflow-hidden">
+             <div class="absolute -top-10 -right-10 w-40 h-40 bg-brand-green/10 rounded-full blur-3xl"></div>
+             <h3 class="text-3xl font-extrabold text-white mb-6">Pronto para dar o<br>próximo passo?</h3>
+             <p class="text-brand-muted mb-10 text-xl leading-relaxed font-medium">Solicite seu projeto e tenha a melhor experiência em mobilidade elétrica do mercado.</p>
+             <div class="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
+               <a href="https://wa.me/5512981039845" class="bg-brand-green text-brand-bg font-extrabold py-5 px-10 rounded-2xl hover:brightness-110 active:scale-95 transition-all shadow-xl shadow-brand-green/20 text-lg flex items-center justify-center gap-2.5">
+                 <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
+                 WhatsApp
+               </a>
+               <div class="flex items-center justify-center lg:justify-start gap-4">
+                  <a href="mailto:contato@voltchz.com.br" class="text-white font-bold hover:text-brand-green transition-colors text-base border-b border-white/20 pb-1">
+                    contato@voltchz.com.br
+                  </a>
+               </div>
+             </div>
           </div>
-          <div class="faq-item">
-            <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false"
-              style="color:var(--text); border-color:rgba(255,255,255,0.1)">
-              <span class="faq-q">Quanto tempo leva a instalação completa?</span>
-              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round">
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner" style="color:var(--muted)">Uma instalação residencial simples geralmente é
-                concluída em 1 dia. Projetos comerciais ou de condomínios podem levar de 3 a 10 dias úteis, dependendo
-                da complexidade da infraestrutura elétrica necessária.</div>
-            </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false"
-              style="color:var(--text); border-color:rgba(255,255,255,0.1)">
-              <span class="faq-q">Meu condomínio permite instalar carregador?</span>
-              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round">
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner" style="color:var(--muted)">A Lei Federal 14.741/2023 garante o direito do
-                condômino de instalar infraestrutura para carregamento de VE. A VoltchZ prepara toda a documentação
-                técnica necessária para apresentar à administração do condomínio.</div>
-            </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false"
-              style="color:var(--text); border-color:rgba(255,255,255,0.1)">
-              <span class="faq-q">O carregador funciona com qualquer carro elétrico?</span>
-              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round">
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner" style="color:var(--muted)">Sim. Os carregadores que instalamos utilizam
-                conectores padrão (Tipo 2 para AC e CCS2 para DC), compatíveis com a maioria dos veículos elétricos
-                vendidos no Brasil.</div>
-            </div>
-          </div>
-          <div class="faq-item">
-            <button class="faq-btn" onclick="toggleFaq(this)" aria-expanded="false"
-              style="color:var(--text); border-color:rgba(255,255,255,0.1)">
-              <span class="faq-q">A VoltchZ atende fora de São José dos Campos?</span>
-              <svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round">
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
-            </button>
-            <div class="faq-answer">
-              <div class="faq-answer-inner" style="color:var(--muted)">Sim! Atendemos toda a região do Vale do Paraíba e
-                demais localidades sob consulta. Entre em contato para verificar a disponibilidade na sua região.</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CTA / CONTATO -->
-  <section id="contato" style="background:#ffffff;">
-    <div class="section-inner observe">
-      <div class="split-grid">
-        <div class="cta-card" style="background:rgba(0,0,0,0.02)">
-          <p class="section-eyebrow" style="margin-bottom:16px">Fale Conosco</p>
-          <h2 class="section-title" style="margin-bottom:14px;color:var(--text-dark)!important">Pronto para Carregar o
-            Futuro?</h2>
-          <p class="cta-desc" style="color:#555">Solicite um orçamento sem compromisso. Nossa equipe técnica retorna em
-            até 24h com uma proposta personalizada e pronta para ser discutida.</p>
-          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-top:24px">
-            <a href="https://wa.me/5512981039845" target="_blank" rel="noopener noreferrer" class="btn-primary">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                <path
-                  d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-              </svg>
-              Falar no WhatsApp
-            </a>
-            <a href="mailto:contato@voltchz.com.br" class="btn-ghost" style="color:#555">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                <polyline points="22,6 12,13 2,6" />
-              </svg>
-              contato@voltchz.com.br
-            </a>
-          </div>
-        </div>
-        <div
-          style="border-radius:24px;overflow:hidden;aspect-ratio:4/3;border:1px solid rgba(0,0,0,0.06);box-shadow:0 12px 32px rgba(0,0,0,0.08);">
-          <img
-            src="https://cdn.awsli.com.br/2500x2500/2019/2019948/produto/238424893/conhecer-e-confia-3-6o2zwu0c80.jpg"
-            style="width:100%;height:100%;object-fit:cover;" alt="Carregador EV Moderno Voltchz" loading="lazy">
         </div>
       </div>
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer>
-    <div
-      style="max-width:1200px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px">
-      <img src="IMAGENS/logo.png" alt="VoltchZ Brasil" style="height:24px;width:auto;opacity:.7">
-      <p style="font-size:12px;color:rgba(255,255,255,0.6)">© 2025 VoltchZ Brasil · Todos os direitos reservados · São
-        José dos Campos, SP.</p>
+  <footer class="bg-brand-bg py-16 px-6 border-t border-white/10">
+    <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
+      <img src="IMAGENS/logo.png" alt="VoltchZ Brasil" class="h-7 opacity-50 grayscale hover:grayscale-0 transition-all">
+      <div class="flex flex-col items-center md:items-end gap-2 text-brand-muted text-[11px] font-bold tracking-widest uppercase">
+        <span>© 2025 VoltchZ Brasil · Todos os direitos reservados</span>
+        <span>São José dos Campos, SP.</span>
+      </div>
     </div>
   </footer>
 
-  <script>
-      (function () {
-        const logoSrc = 'IMAGENS/logo.png';
-        document.querySelectorAll('img[alt="VoltchZ Brasil"]').forEach(img => img.src = logoSrc);
-      })();
-
-    // ──────────────────────────────────────────
-    //  CLIENTS SLIDER JS
-    // ──────────────────────────────────────────
-    let currentClientSlide = 0;
-    const clientSlides = document.querySelectorAll('.client-slide');
-    const dotsContainer = document.querySelector('.client-slider-dots');
-    let clientTimer = null;
-
-    if (clientSlides.length > 0) {
-      // Create dots dynamically
-      clientSlides.forEach((_, idx) => {
-        const dot = document.createElement('button');
-        dot.className = 'client-slider-dot' + (idx === 0 ? ' active' : '');
-        dot.addEventListener('click', () => { goToClientSlide(idx); resetClientTimer(); });
-        dotsContainer.appendChild(dot);
-      });
-
-      const clientDots = document.querySelectorAll('.client-slider-dot');
-
-      window.moveClientSlide = function (dir) {
-        let next = currentClientSlide + dir;
-        if (next >= clientSlides.length) next = 0;
-        if (next < 0) next = clientSlides.length - 1;
-        goToClientSlide(next);
-        resetClientTimer();
-      };
-
-      window.goToClientSlide = function (idx) {
-        clientSlides[currentClientSlide].classList.remove('active');
-        if (clientDots[currentClientSlide]) clientDots[currentClientSlide].classList.remove('active');
-
-        currentClientSlide = idx;
-
-        clientSlides[currentClientSlide].classList.add('active');
-        if (clientDots[currentClientSlide]) clientDots[currentClientSlide].classList.add('active');
-      };
-
-      function resetClientTimer() {
-        clearInterval(clientTimer);
-        clientTimer = setInterval(() => { moveClientSlide(1); }, 4000);
-      }
-
-      // Pause on hover
-      const wrapper = document.getElementById('clients-slider');
-      wrapper.addEventListener('mouseenter', () => clearInterval(clientTimer));
-      wrapper.addEventListener('mouseleave', resetClientTimer);
-
-      resetClientTimer();
-    }
-
-    // ──────────────────────────────────────────
-    //  CAROUSEL
-    // ──────────────────────────────────────────
-    (function () {
-      const TOTAL = 3;
-      let current = 0;
-      let timer = null;
-      const AUTOPLAY_DELAY = 6000;
-
-      function goTo(idx) {
-        document.getElementById('slide-' + current).classList.remove('active');
-        document.getElementById('dot-' + current).classList.remove('active');
-        document.getElementById('dot-' + current).setAttribute('aria-selected', 'false');
-        current = (idx + TOTAL) % TOTAL;
-        document.getElementById('slide-' + current).classList.add('active');
-        document.getElementById('dot-' + current).classList.add('active');
-        document.getElementById('dot-' + current).setAttribute('aria-selected', 'true');
-      }
-
-      function startAutoplay() {
-        stopAutoplay();
-        timer = setInterval(() => goTo(current + 1), AUTOPLAY_DELAY);
-      }
-      function stopAutoplay() {
-        if (timer) { clearInterval(timer); timer = null; }
-      }
-
-      document.getElementById('carousel-prev').addEventListener('click', () => { goTo(current - 1); startAutoplay(); });
-      document.getElementById('carousel-next').addEventListener('click', () => { goTo(current + 1); startAutoplay(); });
-
-      for (let i = 0; i < TOTAL; i++) {
-        document.getElementById('dot-' + i).addEventListener('click', () => { goTo(i); startAutoplay(); });
-      }
-
-      // Pause on hover
-      document.getElementById('hero-section').addEventListener('mouseenter', stopAutoplay);
-      document.getElementById('hero-section').addEventListener('mouseleave', startAutoplay);
-
-      // Touch/swipe support
-      let touchStartX = 0;
-      document.getElementById('hero-section').addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].clientX; stopAutoplay(); }, { passive: true });
-      document.getElementById('hero-section').addEventListener('touchend', e => {
-        const dx = e.changedTouches[0].clientX - touchStartX;
-        if (Math.abs(dx) > 50) { goTo(dx < 0 ? current + 1 : current - 1); }
-        startAutoplay();
-      }, { passive: true });
-
-      startAutoplay();
-    })();
-
-    // ──────────────────────────────────────────
-    //  NAV SCROLL
-    // ──────────────────────────────────────────
-    const nav = document.getElementById('main-nav');
-    window.addEventListener('scroll', () => {
-      nav.classList.toggle('scrolled', window.scrollY > 40);
-      updateActiveLink();
-    }, { passive: true });
-
-    function updateActiveLink() {
-      const sections = ['servicos', 'o-que-faz', 'sobre', 'clientes', 'contato'];
-      const links = document.querySelectorAll('#nav-links a');
-      let current = '';
-      sections.forEach(id => {
-        const el = document.getElementById(id);
-        if (el && window.scrollY >= el.offsetTop - 100) current = id;
-      });
-      links.forEach(a => {
-        const href = a.getAttribute('href').replace('#', '');
-        a.classList.toggle('active', href === current);
-      });
-    }
-
-    // ──────────────────────────────────────────
-    //  FAQ ACCORDION
-    // ──────────────────────────────────────────
-    function toggleFaq(btn) {
-      const item = btn.closest('.faq-item');
-      const answer = item.querySelector('.faq-answer');
-      const isOpen = item.classList.contains('open');
-      document.querySelectorAll('.faq-item').forEach(i => {
-        i.classList.remove('open');
-        i.querySelector('.faq-answer').classList.remove('open');
-        i.querySelector('button').setAttribute('aria-expanded', 'false');
-      });
-      if (!isOpen) {
-        item.classList.add('open');
-        answer.classList.add('open');
-        btn.setAttribute('aria-expanded', 'true');
-      }
-    }
-
-    // ──────────────────────────────────────────
-    //  COUNTER ANIMATION
-    // ──────────────────────────────────────────
-    function animateCounters() {
-      document.querySelectorAll('.stat-num[data-target]').forEach(el => {
-        const target = parseInt(el.dataset.target);
-        const prefix = el.dataset.prefix || '';
-        const start = performance.now();
-        const dur = 1800;
-        function tick(now) {
-          const p = Math.min((now - start) / dur, 1);
-          const eased = 1 - Math.pow(1 - p, 3);
-          el.textContent = prefix + Math.floor(eased * target);
-          if (p < 1) requestAnimationFrame(tick);
-        }
-        requestAnimationFrame(tick);
-      });
-    }
-
-    // ──────────────────────────────────────────
-    //  INTERSECTION OBSERVER (fade-in)
-    // ──────────────────────────────────────────
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('in-view');
-          io.unobserve(e.target);
-        }
-      });
-    }, { threshold: .12, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('.observe').forEach(el => {
-      el.style.opacity = '0'; el.style.transform = 'translateY(24px)';
-      io.observe(el);
-    });
-
-    // Counter trigger
-    const counterIO = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting) { animateCounters(); counterIO.disconnect(); }
-    }, { threshold: .3 });
-    const statsEl = document.querySelector('.stats-grid');
-    if (statsEl) counterIO.observe(statsEl);
-
-    // ──────────────────────────────────────────
-    //  SMOOTH SCROLL
-    // ──────────────────────────────────────────
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', e => {
-        const target = document.querySelector(a.getAttribute('href'));
-        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
-      });
-    });
-  </script>
+  <script src="scripts.js" defer></script>
 </body>
-
 </html>
