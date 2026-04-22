@@ -249,10 +249,8 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 //  MOBILE MENU TOGGLE
 // ──────────────────────────────────────────
 window.toggleMobileMenu = function() {
-    const btn = document.getElementById('mobile-menu-btn');
     const menu = document.getElementById('mobile-menu');
     if (menu) {
-        const isHidden = menu.style.display === 'none' || menu.style.display === '';
-        menu.style.display = isHidden ? 'block' : 'none';
+        menu.classList.toggle('hidden');
     }
 }
