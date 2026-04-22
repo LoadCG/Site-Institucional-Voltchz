@@ -11,62 +11,90 @@
 })();
 
 // ──────────────────────────────────────────
-//  CLIENTS SLIDER JS
+//  CLIENTS SLIDER & LIGHTBOX
 // ──────────────────────────────────────────
-let currentClientSlide = 0;
-const clientSlides = document.querySelectorAll('.client-slide');
-const dotsContainer = document.querySelector('.client-slider-dots');
-let clientTimer = null;
+(function() {
+  const clientImages = [
+    'IMAGENS/CLIENTES/cliente-1.png',
+    'IMAGENS/CLIENTES/cliente-2.png',
+    'IMAGENS/CLIENTES/cliente-3.png'
+  ];
+  
+  const slider = document.getElementById('clients-slider');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  let currentIdx = 0;
+  let timer = null;
 
-if (clientSlides.length > 0) {
-  // Create dots dynamically
-  clientSlides.forEach((_, idx) => {
-    const dot = document.createElement('button');
-    dot.className = 'client-slider-dot' + (idx === 0 ? ' active' : '');
-    dot.addEventListener('click', () => { goToClientSlide(idx); resetClientTimer(); });
-    dotsContainer.appendChild(dot);
-  });
+  if (slider) {
+    // Inject slides
+    clientImages.forEach((src, idx) => {
+      const slide = document.createElement('div');
+      slide.className = 'client-slide' + (idx === 0 ? ' active' : '');
+      slide.style.backgroundImage = `url('${src}')`;
+      slide.onclick = () => openLightbox(src);
+      slider.appendChild(slide);
+    });
 
-  const clientDots = document.querySelectorAll('.client-slider-dot');
+    function nextSlide() {
+      const slides = slider.querySelectorAll('.client-slide');
+      slides[currentIdx].classList.remove('active');
+      currentIdx = (currentIdx + 1) % slides.length;
+      slides[currentIdx].classList.add('active');
+    }
 
-  window.moveClientSlide = function (dir) {
-    let next = currentClientSlide + dir;
-    if (next >= clientSlides.length) next = 0;
-    if (next < 0) next = clientSlides.length - 1;
-    goToClientSlide(next);
-    resetClientTimer();
-  };
+    function startTimer() {
+      stopTimer();
+      timer = setInterval(nextSlide, 4000);
+    }
 
-  window.goToClientSlide = function (idx) {
-    clientSlides[currentClientSlide].classList.remove('active');
-    if (clientDots[currentClientSlide]) clientDots[currentClientSlide].classList.remove('active');
+    function stopTimer() {
+      if (timer) clearInterval(timer);
+    }
 
-    currentClientSlide = idx;
+    window.openLightbox = (src) => {
+      stopTimer();
+      lightboxImg.src = src;
+      lightbox.classList.remove('hidden');
+      lightbox.classList.add('flex');
+    };
 
-    clientSlides[currentClientSlide].classList.add('active');
-    if (clientDots[currentClientSlide]) clientDots[currentClientSlide].classList.add('active');
-  };
+    window.closeLightbox = () => {
+      lightbox.classList.add('hidden');
+      lightbox.classList.remove('flex');
+      startTimer();
+    };
 
-  function resetClientTimer() {
-    clearInterval(clientTimer);
-    clientTimer = setInterval(() => { moveClientSlide(1); }, 4000);
+    startTimer();
   }
 
-  // Pause on hover
-  const wrapper = document.getElementById('clients-slider');
-  if (wrapper) {
-    wrapper.addEventListener('mouseenter', () => clearInterval(clientTimer));
-    wrapper.addEventListener('mouseleave', resetClientTimer);
+  // LOGOS
+  const logos = [
+    'IMAGENS/LOGOS-CLIENTES/logo-1.png',
+    'IMAGENS/LOGOS-CLIENTES/logo-2.png',
+    'IMAGENS/LOGOS-CLIENTES/logo-3.png'
+  ];
+  const logosContainer = document.getElementById('logos-container');
+  if (logosContainer) {
+    logos.forEach(src => {
+      const img = document.createElement('img');
+      img.src = src;
+      img.alt = 'Logo Cliente';
+      img.className = 'h-12 w-auto object-contain';
+      logosContainer.appendChild(img);
+    });
   }
-
-  resetClientTimer();
-}
+})();
 
 // ──────────────────────────────────────────
 //  CAROUSEL (HERO)
 // ──────────────────────────────────────────
 (function () {
-  const TOTAL = 3;
+  const slides = document.querySelectorAll('.carousel-slide');
+  const dots = document.querySelectorAll('.carousel-dot');
+  const TOTAL = slides.length;
+  if (TOTAL === 0) return;
+
   let current = 0;
   let timer = null;
   const AUTOPLAY_DELAY = 6000;
@@ -75,23 +103,27 @@ if (clientSlides.length > 0) {
   if (!heroSection) return;
 
   function goTo(idx) {
-    const prevSlide = document.getElementById('slide-' + current);
-    const prevDot = document.getElementById('dot-' + current);
+    const prevSlide = slides[current];
+    const prevDot = dots[current];
     
     if (prevSlide) prevSlide.classList.remove('active');
     if (prevDot) {
       prevDot.classList.remove('active');
+      prevDot.classList.remove('bg-white');
+      prevDot.classList.add('bg-white/40');
       prevDot.setAttribute('aria-selected', 'false');
     }
 
     current = (idx + TOTAL) % TOTAL;
 
-    const nextSlide = document.getElementById('slide-' + current);
-    const nextDot = document.getElementById('dot-' + current);
+    const nextSlide = slides[current];
+    const nextDot = dots[current];
 
     if (nextSlide) nextSlide.classList.add('active');
     if (nextDot) {
       nextDot.classList.add('active');
+      nextDot.classList.add('bg-white');
+      nextDot.classList.remove('bg-white/40');
       nextDot.setAttribute('aria-selected', 'true');
     }
   }
@@ -110,10 +142,9 @@ if (clientSlides.length > 0) {
   if (prevBtn) prevBtn.addEventListener('click', () => { goTo(current - 1); startAutoplay(); });
   if (nextBtn) nextBtn.addEventListener('click', () => { goTo(current + 1); startAutoplay(); });
 
-  for (let i = 0; i < TOTAL; i++) {
-    const dot = document.getElementById('dot-' + i);
-    if (dot) dot.addEventListener('click', () => { goTo(i); startAutoplay(); });
-  }
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => { goTo(i); startAutoplay(); });
+  });
 
   // Pause on hover
   heroSection.addEventListener('mouseenter', stopAutoplay);
@@ -132,18 +163,27 @@ if (clientSlides.length > 0) {
 })();
 
 // ──────────────────────────────────────────
-//  NAV SCROLL & ACTIVE LINKS
+//  NAV SCROLL & PROGRESS BAR
 // ──────────────────────────────────────────
 const nav = document.getElementById('main-nav');
+const progressBar = document.getElementById('progress-bar');
+
 if (nav) {
   window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 40);
+    const scrollY = window.scrollY;
+    nav.classList.toggle('scrolled', scrollY > 40);
     updateActiveLink();
+    
+    // Progress Bar
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    if (progressBar) progressBar.style.width = scrolled + "%";
   }, { passive: true });
 }
 
 function updateActiveLink() {
-  const sections = ['servicos', 'o-que-faz', 'sobre', 'clientes', 'contato'];
+  const sections = ['servicos', 'o-que-faz', 'clientes', 'sobre', 'contato'];
   const links = document.querySelectorAll('#nav-links a');
   let current = '';
   sections.forEach(id => {
@@ -203,13 +243,13 @@ const io = new IntersectionObserver((entries) => {
   entries.forEach(e => {
     if (e.isIntersecting) {
       e.target.classList.add('in-view');
-      // Special logic for observers that trigger styles
       e.target.style.opacity = '1';
       e.target.style.transform = 'translateY(0)';
+      // Add slight delay for staggered feel if elements are near
       io.unobserve(e.target);
     }
   });
-}, { threshold: .12, rootMargin: '0px 0px -40px 0px' });
+}, { threshold: .1, rootMargin: '0px 0px -50px 0px' });
 
 document.querySelectorAll('.observe').forEach(el => {
   el.style.opacity = '0';
